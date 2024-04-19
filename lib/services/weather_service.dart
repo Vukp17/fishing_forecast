@@ -18,5 +18,5 @@ class WeatherService {
     } catch (error) {
       return [0.0]; // Default value
     }
-  }
+  } 
 }

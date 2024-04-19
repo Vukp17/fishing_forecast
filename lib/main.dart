@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Fishing App',
       theme: ThemeData(
         primarySwatch: Colors.blue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
+        visualDensity: VisualDensity.adaptivePlatformDensity, 
       ),
       home: BottomNavigationExample(),
     );
@@ -40,6 +40,10 @@ class _BottomNavigationExampleState extends State<BottomNavigationExample> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: _screens[_currentIndex],
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        child: Icon(Icons.add),
+      ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: (index) {

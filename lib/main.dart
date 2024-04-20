@@ -1,13 +1,18 @@
+import 'package:fishingapp/widgets/main/bottom_navigation.dart';
 import 'package:flutter/material.dart';
-import 'screens/home_screen.dart';
-import 'screens/search_screen.dart';
-import 'screens/profile_screen.dart';
-
+// import 'screens/home_screen.dart';
+// import 'screens/search_screen.dart';
+// import 'screens/profile_screen.dart';
+//services
+import 'services/auth_service.dart';
+import 'screens/login_screen.dart';
 void main() {
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
+    final AuthService _authService = AuthService();
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -16,56 +21,8 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity, 
       ),
-      home: BottomNavigationExample(),
+      home: _authService.isLoggedIn ? BottomNavigationExample() : LoginScreen(),
     );
   }
 }
 
-class BottomNavigationExample extends StatefulWidget {
-  @override
-  _BottomNavigationExampleState createState() =>
-      _BottomNavigationExampleState();
-}
-
-class _BottomNavigationExampleState extends State<BottomNavigationExample> {
-  int _currentIndex = 0;
-
-  final List<Widget> _screens = [
-    HomeScreen(),
-    SearchScreen(),
-    ProfileScreen(),
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: _screens[_currentIndex],
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: Icon(Icons.add),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
-        items: [
-          BottomNavigationBarItem(
-            icon:  Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            label: 'Search',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-        ],
-      ),
-    );
-  }
-}

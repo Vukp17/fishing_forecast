@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
     final AuthService _authService = AuthService();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) { 
     return MaterialApp(
       title: 'Flutter Fishing App',
       theme: ThemeData(

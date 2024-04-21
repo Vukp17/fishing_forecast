@@ -1,6 +1,7 @@
 import 'package:fishingapp/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:fishingapp/widgets/main/bottom_navigation.dart';
+
 class LoginScreen extends StatefulWidget {
   @override
   _LoginScreenState createState() => _LoginScreenState();
@@ -8,8 +9,8 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
-  String _username = '';
-  String _password = '';
+  var _username = '';
+  var _password = '';
 
   void _trySubmit() {
     final isValid = _formKey.currentState?.validate();
@@ -31,10 +32,10 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 255, 255, 255),
+      backgroundColor: Colors.white, // Set background color to white
       body: Center(
         child: Card(
-          margin: EdgeInsets.all(20.0),
+          // color:Colors.transparent,
           child: Padding(
             padding: EdgeInsets.all(16.0),
             child: Form(
@@ -43,7 +44,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   Text(
-                    'Login',
+                    'fishingforecast', // Add logo text
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
@@ -79,34 +80,47 @@ class _LoginScreenState extends State<LoginScreen> {
                   ElevatedButton(
                     child: Text('Login'),
                     style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white, backgroundColor: Color(0xFF42d9c8), // foreground
+                      foregroundColor: Colors.white,
+                      backgroundColor: Color(0xFF42d9c8), // foreground
                     ),
                     onPressed: _trySubmit,
                   ),
                   SizedBox(height: 20.0),
-                  ElevatedButton.icon( 
-                    //C:\Dev\fishingapp\lib\assets\google_logo.png  // Copy the google_logo.png file
-                    //to  C:\Dev\fishingapp\lib\screens\login_screen.dart // Paste the google_logo.png file
-                    icon: Image.asset('assets/google_logo.png', height: 18.0),
-                    label: Text('Sign in with Google'),
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.black, backgroundColor: Colors.white,
-                      elevation: 1,
-                    ),
-                    onPressed: () {
-                      // Handle Google sign in
-                    },
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      IconButton(
+                        icon:
+                            Image.asset('assets/google_logo.png', height: 18.0),
+                        onPressed: () {
+                          // Handle Google sign in
+                        },
+                      ),
+                      IconButton(
+                        icon:
+                            Image.asset('assets/apple_logo.png', height: 18.0),
+                        onPressed: () {
+                          // Handle Apple sign in
+                        },
+                      ),
+                      IconButton(
+                        icon: Image.asset('assets/facebook_logo.png',
+                            height: 18.0),
+                        onPressed: () {
+                          // Handle Facebook sign in
+                        },
+                      ),
+                    ],
                   ),
                   SizedBox(height: 10.0),
-                  ElevatedButton.icon(
-                    icon: Icon(Icons.phone_iphone),
-                    label: Text('Sign in with Apple'),
+                  ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white, backgroundColor: Colors.black,
-                      elevation: 1,
+                      foregroundColor: Colors.white,
+                      backgroundColor: Color(0xFF42d9c8), // foreground
                     ),
+                    child: Text('Create Account'),
                     onPressed: () {
-                      // Handle Apple sign in
+                      // Handle account creation
                     },
                   ),
                 ],

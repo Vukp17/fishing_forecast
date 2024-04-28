@@ -1,4 +1,5 @@
 import 'package:fishingapp/models/user_model.dart';
+import 'package:fishingapp/screens/register_screen.dart';
 import 'package:fishingapp/widgets/main/bottom_navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -28,6 +29,11 @@ class MyApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity, 
       ),
       home: _authService.isLoggedIn == true ? BottomNavigationExample() : LoginScreen(),
+      routes: {
+        '/login': (context) => LoginScreen(),
+        '/home': (context) => BottomNavigationExample(),
+        '/register':(context) => RegistrationScreen()
+      },
     );
   }
 }

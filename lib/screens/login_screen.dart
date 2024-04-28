@@ -139,6 +139,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     child: Text('Create Account'),
                     onPressed: () {
+                      Navigator.of(context).pushNamed('/register');
                       // Handle account creation
                     },
                   ),

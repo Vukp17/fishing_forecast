@@ -1,6 +1,8 @@
+import 'package:fishingapp/models/user_model.dart';
 import 'package:fishingapp/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:fishingapp/widgets/main/bottom_navigation.dart';
+import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -12,12 +14,29 @@ class _LoginScreenState extends State<LoginScreen> {
   var _username = '';
   var _password = '';
 
-  void _trySubmit() {
+  // void _trySubmit()  async{
+  //   final isValid = _formKey.currentState?.validate();
+  //   if (isValid == true) {
+  //     // Use AuthService to log in the user
+
+  //     if ( await AuthService().login(_username, _password)) {
+  //       Navigator.of(context).pushReplacement(
+  //         MaterialPageRoute(builder: (context) => BottomNavigationExample()),
+  //       );
+  //     } else {
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         SnackBar(content: Text('Invalid username or password')),
+  //       );
+  //     }
+  //   }
+  // }
+  void performLogin() async {
     final isValid = _formKey.currentState?.validate();
     if (isValid == true) {
-      // Use AuthService to log in the user
-      AuthService().login(_username, _password);
-      if (!AuthService().isLoggedIn) {
+      final userData = await AuthService().login(_username, _password);
+      if (userData != null) {
+        final userModel = Provider.of<UserModel>(context, listen: false);
+        userModel.setUser(userData);
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (context) => BottomNavigationExample()),
         );
@@ -83,7 +102,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       foregroundColor: Colors.white,
                       backgroundColor: Color(0xFF42d9c8), // foreground
                     ),
-                    onPressed: _trySubmit,
+                    onPressed: performLogin,
                   ),
                   SizedBox(height: 20.0),
                   Row(

@@ -1,5 +1,6 @@
-import 'dart:math';
 
+import 'package:fishingapp/models/user_model.dart';
+import 'package:fishingapp/services/auth_service.dart';
 import 'package:fishingapp/widgets/main/app_drawer.dart';
 import 'package:flutter/material.dart';
 
@@ -17,14 +18,26 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   List<double> _hourlyWeather = [];
+  User? _user;
   bool _isLoading = false;
   String _selectedFilter = '';
   @override
   void initState() {
     super.initState();
     _fetchHourlyWeather();
-  }
+        loadUserData();
 
+  }
+  Future<void> loadUserData() async {
+    try {
+      final userData = await AuthService().getUserData();
+      setState(() {
+        _user = userData;
+      });
+    } catch (e) {
+      print('Failed to load user data: $e');
+    }
+  }
   Future<void> _fetchHourlyWeather() async {
     setState(() {
       _isLoading = true;

@@ -1,5 +1,7 @@
+import 'package:fishingapp/models/user_model.dart';
 import 'package:fishingapp/widgets/main/bottom_navigation.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 // import 'screens/home_screen.dart';
 // import 'screens/search_screen.dart';
 // import 'screens/profile_screen.dart';
@@ -7,9 +9,13 @@ import 'package:flutter/material.dart';
 import 'services/auth_service.dart';
 import 'screens/login_screen.dart';
 void main() {
-  runApp(MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => UserModel(),
+      child: MyApp(),
+    ),
+  );
 }
-
 class MyApp extends StatelessWidget {
     final AuthService _authService = AuthService();
 
@@ -21,7 +27,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity, 
       ),
-      home: _authService.isLoggedIn ? BottomNavigationExample() : LoginScreen(),
+      home: _authService.isLoggedIn == true ? BottomNavigationExample() : LoginScreen(),
     );
   }
 }

@@ -61,10 +61,10 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Fishing Spots'),
+        title: const Text('Fishing Spots'),
         leading: Builder(
           builder: (context) => IconButton(
-            icon: Icon(Icons.menu),
+            icon: const Icon(Icons.menu),
             onPressed: () => Scaffold.of(context).openDrawer(),
           ),
         ),
@@ -72,7 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
       drawer: AppDrawer(),
 
       body: _isLoading
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -83,8 +83,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         _hourlyWeather.isNotEmpty ? _hourlyWeather[0] : 0.0,
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.0),
                   child: Text(
                     'Locations',
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -117,9 +117,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       return ListTile(
                         title: Text(fishingSpots[
                             index]), // Display the fishing spot name
-                        subtitle: Text(
+                        subtitle: const Text(
                             'Description of the fishing spot goes here'), // Add description here
-                        leading: Icon(Icons
+                        leading: const Icon(Icons
                             .location_on), // Use a location icon as leading widget
                         onTap: () {
                           // Add navigation to the fishing spot details screen
@@ -146,7 +146,7 @@ class _HomeScreenState extends State<HomeScreen> {
       child: ChoiceChip(
         label: Text(title),
         selected: _selectedFilter == title,
-        selectedColor: Color(0xFF40d3c3),
+        selectedColor: const Color(0xFF40d3c3),
         onSelected: (bool selected) {
           setState(() {
             if (selected) {

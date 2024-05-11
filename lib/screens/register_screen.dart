@@ -1,4 +1,8 @@
+import 'package:fishingapp/models/user_model.dart';
+import 'package:fishingapp/services/auth_service.dart';
+import 'package:fishingapp/widgets/main/bottom_navigation.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class RegistrationScreen extends StatefulWidget {
   @override
@@ -12,11 +16,27 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
 
+performRegister() async {
+    final isValid = _formKey.currentState?.validate();
+    if (isValid == true) {
+      // Use AuthService to register the user
+      final userData = await AuthService().register(
+        _usernameController.text,
+        _emailController.text,
+        _passwordController.text,
+      );
+      final userModel = Provider.of<UserModel>(context, listen: false);
+      userModel.setUser(userData);
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => BottomNavigationExample()),
+      );
+        }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Registration'),
+        title: const Text('Registration'),
       ),
       body: Container(
         color: Colors.white,
@@ -27,7 +47,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             children: <Widget>[
               TextFormField(
                 controller: _usernameController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Username',
                 ),
                 validator: (value) {
@@ -39,7 +59,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               ),
               TextFormField(
                 controller: _emailController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Email',
                 ),
                 validator: (value) {
@@ -51,7 +71,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               ),
               TextFormField(
                 controller: _passwordController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Password',
                 ),
                 obscureText: true,
@@ -64,7 +84,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               ),
               TextFormField(
                 controller: _confirmPasswordController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Confirm Password',
                 ),
                 obscureText: true,
@@ -79,11 +99,13 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
                     // Perform registration
+                    performRegister();
+                    
                   }
                 },
                 child: Text('Register'),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Text('Or register with'),
               SizedBox(height: 20),
               Row(
@@ -104,8 +126,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     },
                   ),
                   ElevatedButton.icon(
-                    icon: Icon(Icons.apple),
-                    label: Text('Apple'),
+                    icon: const Icon(Icons.apple),
+                    label: const  Text('Apple'),
                     onPressed: () {
                       // Perform Apple registration
                     },

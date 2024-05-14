@@ -109,22 +109,22 @@ class TemperatureCard extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 5),
-            // Humidity
-            Icon(
-              Icons.water,
-              color: Colors.blue,
-              size: 30, // Smaller icon size
-            ),
-            SizedBox(height: 5),
-            Text(
-              '${hourlyWeatherList[index].humidity.toStringAsFixed(1)}%',
-              style: TextStyle(
-                fontSize: 14, // Smaller font size
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+            // SizedBox(height: 5),
+            // // Humidity
+            // Icon(
+            //   Icons.water,
+            //   color: Colors.blue,
+            //   size: 30, // Smaller icon size
+            // ),
+            // SizedBox(height: 5),
+            // Text(
+            //   '${hourlyWeatherList[index].humidity.toStringAsFixed(1)}%',
+            //   style: TextStyle(
+            //     fontSize: 14, // Smaller font size
+            //     color: Colors.white,
+            //     fontWeight: FontWeight.bold,
+            //   ),
+            // ),
             SizedBox(height: 5),
             // Wind Speed
             Icon(

@@ -34,7 +34,7 @@ class WeatherService {
           DateTime time = DateTime.parse(hourlyData['time'][i]);
 
           // Only add data for the current hour for the next 5 days
-          if (time.hour == currentHour && time.difference(now).inDays <= 5) {
+          if (time.hour == currentHour && time.difference(now).inDays <= 4) {
             // print('Temperature Length: ${hourlyData['temperature_2m'].length}, '
             //     'Time Length: ${hourlyData['time'].length}, '
             //     'Humidity Length: ${hourlyData['relative_humidity_2m'].length}, '
@@ -42,9 +42,9 @@ class WeatherService {
             hourlyWeatherList.add(
               HourlyWeather(
                 time: hourlyData['time'][i],
-                temperature: 22,
+                temperature: hourlyData['temperature_2m'][i],
                 humidity: 22,
-                windSpeed: 22,
+                windSpeed: hourlyData['wind_speed_10m'][i],
               ),
             );
           }

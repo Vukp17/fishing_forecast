@@ -63,7 +63,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Fishing Spots'),
+        title:  Text(AppLocalizations.of(context)!.fishingSpots),
         leading: Builder(
           builder: (context) => IconButton(
             icon: const Icon(Icons.menu),
@@ -97,9 +97,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: ListView(
                     scrollDirection: Axis.horizontal,
                     children: [
-                      buildFilterPill('Favorites'),
-                      buildFilterPill('Recent'),
-                      buildFilterPill('All'),
+                      buildFilterPill(AppLocalizations.of(context)!.favorites),
+                      buildFilterPill(AppLocalizations.of(context)!.recent),
+                      buildFilterPill(AppLocalizations.of(context)!.all),
                     ],
                   ),
                 ),

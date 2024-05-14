@@ -3,5 +3,11 @@
   "@helloWorld": {
     "description": "The conventional newborn programmer greeting"
   },
-  "locations":"Locations"
+  "locations":"Locations",
+  "fishingSpots":"Fishing Spots",
+  "favorites":"Favorites",
+   "settings":"Settings",
+   "recent":"Recent",
+   "all":"All"
+
 }

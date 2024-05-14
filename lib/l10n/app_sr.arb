@@ -1,5 +1,11 @@
 {
     "helloWorld": "¡Hola Mundo!",
-  "locations":"Lokacije"
+    "locations": "Lokacije",
+    "fishingSpots":"Ribolovna mesta",
+    "favorites":"Favoriti",
+     "settings":"Podešavanja",
+     "recent":"Nedavno",
+     "all":"Sve"
+
     
 }

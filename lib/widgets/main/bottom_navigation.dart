@@ -43,6 +43,8 @@ class _BottomNavigationExampleState extends State<BottomNavigationExample> {
           }
         },
         child: Icon(Icons.add),
+        backgroundColor: Color(0xFF40d3c3),
+        
       ),
       bottomNavigationBar: Padding(
         padding: EdgeInsets.symmetric(vertical: 10),

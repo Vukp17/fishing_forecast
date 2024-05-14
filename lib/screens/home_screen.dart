@@ -17,7 +17,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  List<double> _hourlyWeather = [];
+  List<HourlyWeather> _hourlyWeather = [];
   User? _user;
   bool _isLoading = false;
   String _selectedFilter = '';
@@ -46,9 +46,10 @@ class _HomeScreenState extends State<HomeScreen> {
     try {
       // Call the fetchHourlyWeather method from WeatherService
       _hourlyWeather = await WeatherService.fetchHourlyWeather();
+      print(_hourlyWeather.length);
     } catch (error) {
       setState(() {
-        _hourlyWeather = [0.0]; // Default value
+        _hourlyWeather = []; // Default value
       });
     } finally {
       setState(() {
@@ -79,8 +80,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: TemperatureCard(
-                    temperature:
-                        _hourlyWeather.isNotEmpty ? _hourlyWeather[0] : 0.0,
+                    hourlyWeatherList:
+                        _hourlyWeather.isNotEmpty ? _hourlyWeather : [], currentLocation: 'New York',
                   ),
                 ),
                 const Padding(

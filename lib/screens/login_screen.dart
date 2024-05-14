@@ -13,38 +13,23 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   var _username = '';
   var _password = '';
-
-  // void _trySubmit()  async{
-  //   final isValid = _formKey.currentState?.validate();
-  //   if (isValid == true) {
-  //     // Use AuthService to log in the user
-
-  //     if ( await AuthService().login(_username, _password)) {
-  //       Navigator.of(context).pushReplacement(
-  //         MaterialPageRoute(builder: (context) => BottomNavigationExample()),
-  //       );
-  //     } else {
-  //       ScaffoldMessenger.of(context).showSnackBar(
-  //         SnackBar(content: Text('Invalid username or password')),
-  //       );
-  //     }
-  //   }
-  // }
+  
   void performLogin() async {
     final isValid = _formKey.currentState?.validate();
     if (isValid == true) {
-      final userData = await AuthService().login(_username, _password);
-      if (userData != null) {
-        final userModel = Provider.of<UserModel>(context, listen: false);
-        userModel.setUser(userData);
+      //final userData = await AuthService().login(_username, _password);
+      
+      // if (userData != null) {
+      //   final userModel = Provider.of<UserModel>(context, listen: false);
+      //   userModel.setUser(userData);
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (context) => BottomNavigationExample()),
         );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Invalid username or password')),
-        );
-      }
+      // } else {
+      //   ScaffoldMessenger.of(context).showSnackBar(
+      //     SnackBar(content: Text('Invalid username or password')),
+      //   );
+      // }
     }
   }
 

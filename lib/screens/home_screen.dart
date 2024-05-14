@@ -3,6 +3,7 @@ import 'package:fishingapp/models/user_model.dart';
 import 'package:fishingapp/services/auth_service.dart';
 import 'package:fishingapp/widgets/main/app_drawer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 //widgets
 import '/widgets/home/fishing_spot.dart';
@@ -84,10 +85,10 @@ class _HomeScreenState extends State<HomeScreen> {
                         _hourlyWeather.isNotEmpty ? _hourlyWeather : [], currentLocation: 'New York',
                   ),
                 ),
-                const Padding(
+                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16.0),
                   child: Text(
-                    'Locations',
+                    AppLocalizations.of(context)!.locations,
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                 ),

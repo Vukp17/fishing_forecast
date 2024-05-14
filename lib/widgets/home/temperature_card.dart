@@ -6,7 +6,8 @@ class TemperatureCard extends StatelessWidget {
   final String currentLocation;
   final List<HourlyWeather> hourlyWeatherList;
 
-  TemperatureCard({required this.currentLocation, required this.hourlyWeatherList});
+  TemperatureCard(
+      {required this.currentLocation, required this.hourlyWeatherList});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +22,7 @@ class TemperatureCard extends StatelessWidget {
       child: DecoratedBox(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
-          gradient: LinearGradient(
+          gradient: const LinearGradient(
             colors: [
               Color(0xFF4a7484),
               Color(0xFF40d3c3),
@@ -38,13 +39,13 @@ class TemperatureCard extends StatelessWidget {
               // Current Location
               Text(
                 currentLocation,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
                 ),
               ),
-              SizedBox(height: 10), // Add some spacing below the location
+              const SizedBox(height: 10), // Add some spacing below the location
 
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
@@ -55,7 +56,7 @@ class TemperatureCard extends StatelessWidget {
                     children: [
                       for (var i = 0; i < hourlyWeatherList.length; i++)
                         Padding(
-                          padding: EdgeInsets.only(right: 20.0),
+                          padding: const EdgeInsets.only(right: 20.0),
                           child: _buildWeatherColumn(i),
                         ),
                     ],
@@ -73,73 +74,68 @@ class TemperatureCard extends StatelessWidget {
     return DecoratedBox(
       decoration: index == 0
           ? BoxDecoration(
+              color: Color(0xFF51aead),
               border: Border.all(
                 color: Colors.white.withOpacity(0.5), // Light gray border color
                 width: 1, // Border width
               ),
               borderRadius: BorderRadius.circular(15),
             )
-          : BoxDecoration(),
+          : const BoxDecoration(),
       child: Padding(
         padding: const EdgeInsets.all(10.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             // Time (Day and Month)
             Text(
               _getTimeText(index),
               style: TextStyle(
-                fontSize: 14,
-                color: index == 0 ? Colors.grey.withOpacity(0.5) : Colors.white,
+                fontSize: 12,
+                color: index == 0 ? Colors.white : Colors.white,
                 fontWeight: FontWeight.bold,
               ),
             ),
             // Temperature
-            Icon(
-              Icons.wb_sunny,
-              color: Colors.orange,
-              size: 30, // Smaller icon size
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Icon(
+                  Icons.wb_sunny,
+                  color: Colors.orange,
+                  size: 20, // Smaller icon size
+                ),
+                const SizedBox(height: 5),
+                Text(
+                  '${hourlyWeatherList[index].temperature.toStringAsFixed(1)}°C',
+                  style: const TextStyle(
+                    fontSize: 12, // Smaller font size
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
             ),
-            SizedBox(height: 5),
-            Text(
-              '${hourlyWeatherList[index].temperature.toStringAsFixed(1)}°C',
-              style: TextStyle(
-                fontSize: 14, // Smaller font size
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            // SizedBox(height: 5),
-            // // Humidity
-            // Icon(
-            //   Icons.water,
-            //   color: Colors.blue,
-            //   size: 30, // Smaller icon size
-            // ),
-            // SizedBox(height: 5),
-            // Text(
-            //   '${hourlyWeatherList[index].humidity.toStringAsFixed(1)}%',
-            //   style: TextStyle(
-            //     fontSize: 14, // Smaller font size
-            //     color: Colors.white,
-            //     fontWeight: FontWeight.bold,
-            //   ),
-            // ),
-            SizedBox(height: 5),
+            const SizedBox(height: 5),
             // Wind Speed
-            Icon(
-              Icons.air,
-              color: Colors.grey,
-              size: 30, // Smaller icon size
-            ),
-            SizedBox(height: 5),
-            Text(
-              '${hourlyWeatherList[index].windSpeed.toStringAsFixed(1)} m/s',
-              style: TextStyle(
-                fontSize: 14, // Smaller font size
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-              ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Icon(
+                  Icons.air,
+                  color: Colors.grey,
+                  size: 20, // Smaller icon size
+                ),
+                const SizedBox(height: 5),
+                Text(
+                  '${hourlyWeatherList[index].windSpeed.toStringAsFixed(1)} m/s',
+                  style: const TextStyle(
+                    fontSize: 12, // Smaller font size
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
             ),
           ],
         ),

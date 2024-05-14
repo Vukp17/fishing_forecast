@@ -13,7 +13,7 @@ class AppDrawer extends StatelessWidget {
             builder: (context, userModel, child) {
               return UserAccountsDrawerHeader(
                 accountName: Text(userModel.user?.username ?? 'Guest'),
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
                       Color(0xFF4a7484),
@@ -24,15 +24,15 @@ class AppDrawer extends StatelessWidget {
                   ), // Set the color here
                 ),
                 accountEmail: Text(userModel.user?.email ?? 'guest@example.com'),
-                currentAccountPicture: CircleAvatar(
+                currentAccountPicture: const CircleAvatar(
                   child: FlutterLogo(size: 42.0),
                 ),
               );
             },
           ),
           ListTile(
-            leading: Icon(Icons.language),
-            title: Text('Languages'),
+            leading: const Icon(Icons.language),
+            title: const Text('Languages'),
             onTap: () {
               // Update the state of the app
               // Then close the drawer
@@ -40,8 +40,8 @@ class AppDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: Icon(Icons.history),
-            title: Text('History of Catches'),
+            leading: const Icon(Icons.history),
+            title: const Text('History of Catches'),
             onTap: () {
               // Update the state of the app
               // Then close the drawer

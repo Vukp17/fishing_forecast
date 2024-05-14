@@ -6,13 +6,13 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
-  String _searchQuery = ''; // Add this line
+// Add this line
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Search'),
+        title: const Text('Search'),
       ),
       body: Column(
         children: [
@@ -21,10 +21,9 @@ class _SearchScreenState extends State<SearchScreen> {
             child: TextField(
               onChanged: (value) {
                 setState(() {
-                  _searchQuery = value;
                 });
               },
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Search',
                 border: OutlineInputBorder(),
               ),

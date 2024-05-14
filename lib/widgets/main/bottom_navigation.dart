@@ -42,12 +42,12 @@ class _BottomNavigationExampleState extends State<BottomNavigationExample> {
             print('No image selected.');
           }
         },
-        child: Icon(Icons.add),
-        backgroundColor: Color(0xFF40d3c3),
+        backgroundColor: const Color(0xFF40d3c3),
+        child: const Icon(Icons.add),
         
       ),
       bottomNavigationBar: Padding(
-        padding: EdgeInsets.symmetric(vertical: 10),
+        padding: const EdgeInsets.symmetric(vertical: 10),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(30),
           child: BottomNavigationBar(
@@ -57,7 +57,7 @@ class _BottomNavigationExampleState extends State<BottomNavigationExample> {
                 _currentIndex = index;
               });
             },
-            items: [
+            items: const [
               BottomNavigationBarItem(
                 icon: Icon(Icons.home),
                 label: 'Home',
@@ -74,7 +74,7 @@ class _BottomNavigationExampleState extends State<BottomNavigationExample> {
             ],
             backgroundColor: Colors.white,
             elevation: 5,
-            selectedItemColor:  Color(0xFF40d3c3),// Set the color here
+            selectedItemColor:  const Color(0xFF40d3c3),// Set the color here
             unselectedItemColor: Colors.grey, // Set the color for unselected items here
 
 

@@ -13,6 +13,13 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   var _username = '';
   var _password = '';
+  bool _obscureText = true;
+
+  void _togglePasswordVisibility() {
+    setState(() {
+      _obscureText = !_obscureText;
+    });
+  }
 
   void performLogin() async {
     final isValid = _formKey.currentState?.validate();
@@ -85,12 +92,20 @@ class _LoginScreenState extends State<LoginScreen> {
                     labelText: 'Password',
                     fillColor: Colors.white,
                     filled: true,
-                    //obscureText: true,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(25.0),
                       borderSide: BorderSide(),
                     ),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        // Based on passwordVisible state choose the icon
+                        _obscureText ? Icons.visibility : Icons.visibility_off,
+                        color: Theme.of(context).primaryColorDark,
+                      ),
+                      onPressed: _togglePasswordVisibility,
+                    ),
                   ),
+                  obscureText: _obscureText,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your password';
@@ -105,8 +120,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: const Text(
-                  'Forgot password?',
-                  style: TextStyle(),
+                    'Forgot password?',
+                    style: TextStyle(),
                   ),
                 ),
                 const SizedBox(height: 20.0),
@@ -123,32 +138,57 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 const SizedBox(height: 20.0),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    IconButton(
-                      icon:
-                          Image.asset('assets/google_logo.png', height: 18.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.rectangle,
+                      borderRadius: BorderRadius.circular(10.0), // Add this
+                      border: Border.all(
+                        color: Color(0xFF42d9c8),
+                      ),
+                    ),
+                    child: IconButton(
+                      icon: Image.asset('assets/apple_logo.png', height: 18.0),
                       onPressed: () {
                         // Handle Google sign in
                       },
                     ),
-                    IconButton(
-                      icon:
-                          Image.asset('assets/apple_logo.png', height: 18.0),
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.rectangle,
+                      borderRadius: BorderRadius.circular(10.0), // Add this
+                      border: Border.all(
+                        color: Color(0xFF42d9c8),
+                      ),
+                    ),
+                    child: IconButton(
+                      icon: Image.asset('assets/google_logo.png', height: 18.0),
                       onPressed: () {
                         // Handle Apple sign in
                       },
                     ),
-                    IconButton(
-                      icon: Image.asset('assets/facebook_logo.png',
-                          height: 18.0),
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.rectangle,
+                      borderRadius: BorderRadius.circular(10.0), // Add this
+                      border: Border.all(
+                        color: Color(0xFF42d9c8),
+                      ),
+                    ),
+                    child: IconButton(
+                      icon:
+                          Image.asset('assets/facebook_logo.png', height: 18.0),
                       onPressed: () {
                         // Handle Facebook sign in
                       },
                     ),
-                  ],
-                ),
+                  ),
+                ],
+              ),
                 const SizedBox(height: 10.0),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(

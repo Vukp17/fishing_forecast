@@ -15,8 +15,15 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
+  bool _obscureText = true;
 
-performRegister() async {
+  void _togglePasswordVisibility() {
+    setState(() {
+      _obscureText = !_obscureText;
+    });
+  }
+
+  performRegister() async {
     final isValid = _formKey.currentState?.validate();
     if (isValid == true) {
       // Use AuthService to register the user
@@ -30,8 +37,9 @@ performRegister() async {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (context) => BottomNavigationExample()),
       );
-        }
+    }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,8 +55,14 @@ performRegister() async {
             children: <Widget>[
               TextFormField(
                 controller: _usernameController,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: 'Username',
+                  fillColor: Colors.white,
+                  filled: true,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(25.0),
+                    borderSide: BorderSide(),
+                  ),
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -57,10 +71,17 @@ performRegister() async {
                   return null;
                 },
               ),
+              const SizedBox(height: 20),
               TextFormField(
                 controller: _emailController,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: 'Email',
+                  fillColor: Colors.white,
+                  filled: true,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(25.0),
+                    borderSide: BorderSide(),
+                  ),
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -69,12 +90,27 @@ performRegister() async {
                   return null;
                 },
               ),
+              const SizedBox(height: 20),
               TextFormField(
                 controller: _passwordController,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: 'Password',
+                  fillColor: Colors.white,
+                  filled: true,
+                  //obscureText: true,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(25.0),
+                    borderSide: BorderSide(),
+                  ),
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      // Based on passwordVisible state choose the icon
+                      _obscureText ? Icons.visibility : Icons.visibility_off,
+                      color: Theme.of(context).primaryColorDark,
+                    ),
+                    onPressed: _togglePasswordVisibility,
+                  ),
                 ),
-                obscureText: true,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter your password';
@@ -82,12 +118,27 @@ performRegister() async {
                   return null;
                 },
               ),
+              const SizedBox(height: 20),
               TextFormField(
                 controller: _confirmPasswordController,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: 'Confirm Password',
+                  fillColor: Colors.white,
+                  filled: true,
+                  // obscureText: true,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(25.0),
+                    borderSide: BorderSide(),
+                  ),
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      // Based on passwordVisible state choose the icon
+                      _obscureText ? Icons.visibility : Icons.visibility_off,
+                      color: Theme.of(context).primaryColorDark,
+                    ),
+                    onPressed: _togglePasswordVisibility,
+                  ),
                 ),
-                obscureText: true,
                 validator: (value) {
                   if (value != _passwordController.text) {
                     return 'Passwords do not match';
@@ -95,42 +146,69 @@ performRegister() async {
                   return null;
                 },
               ),
-              ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    // Perform registration
-                    performRegister();
-                    
-                  }
-                },
-                child: Text('Register'),
+              const SizedBox(height: 20),
+              Container(
+                width: double.infinity,
+                child: ElevatedButton(
+                  child: const Text('Register'),
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    backgroundColor: const Color(0xFF42d9c8), // foreground
+                  ),
+                  onPressed: performRegister,
+                ),
               ),
               const SizedBox(height: 20),
               Text('Or register with'),
               SizedBox(height: 20),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
-                  ElevatedButton.icon(
-                    icon: Icon(Icons.face),
-                    label: Text('Facebook'),
-                    onPressed: () {
-                      // Perform Facebook registration
-                    },
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.rectangle,
+                      borderRadius: BorderRadius.circular(10.0), // Add this
+                      border: Border.all(
+                        color: Color(0xFF42d9c8),
+                      ),
+                    ),
+                    child: IconButton(
+                      icon: Image.asset('assets/apple_logo.png', height: 18.0),
+                      onPressed: () {
+                        // Handle Google sign in
+                      },
+                    ),
                   ),
-                  ElevatedButton.icon(
-                    icon: Icon(Icons.g_translate),
-                    label: Text('Google'),
-                    onPressed: () {
-                      // Perform Google registration
-                    },
+                  Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.rectangle,
+                      borderRadius: BorderRadius.circular(10.0), // Add this
+                      border: Border.all(
+                        color: Color(0xFF42d9c8),
+                      ),
+                    ),
+                    child: IconButton(
+                      icon: Image.asset('assets/google_logo.png', height: 18.0),
+                      onPressed: () {
+                        // Handle Apple sign in
+                      },
+                    ),
                   ),
-                  ElevatedButton.icon(
-                    icon: const Icon(Icons.apple),
-                    label: const  Text('Apple'),
-                    onPressed: () {
-                      // Perform Apple registration
-                    },
+                  Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.rectangle,
+                      borderRadius: BorderRadius.circular(10.0), // Add this
+                      border: Border.all(
+                        color: Color(0xFF42d9c8),
+                      ),
+                    ),
+                    child: IconButton(
+                      icon:
+                          Image.asset('assets/facebook_logo.png', height: 18.0),
+                      onPressed: () {
+                        // Handle Facebook sign in
+                      },
+                    ),
                   ),
                 ],
               ),

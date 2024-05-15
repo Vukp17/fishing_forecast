@@ -1,12 +1,13 @@
 import 'dart:convert';
 import 'package:fishingapp/models/user_model.dart';
+import 'package:fishingapp/services/api_contant.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService {
   Future<User?> login(String username, String password) async {
     final response = await http.post(
-      Uri.parse('http://164.8.67.107:8000/api/v1/login'),
+      Uri.parse('$BASE_URL/login'),
       body: {'username': username, 'password': password},
     );
 
@@ -50,7 +51,7 @@ class AuthService {
     if (accessToken != null) {
       final user_id = await getUserId();
       final response = await http.get(
-        Uri.parse('http://164.8.67.107:8000/api/v1/users/$user_id'),
+        Uri.parse('$BASE_URL/users/$user_id'),
         headers: {'Authorization': 'Bearer $accessToken'},
       );
 
@@ -67,7 +68,7 @@ class AuthService {
 
   Future<User> register(String username, String email, String password) async {
     final response = await http.post(
-      Uri.parse('http://164.8.67.107:8000/api/v1/register'),
+      Uri.parse('$BASE_URL/register'),
       body: {'username': username, 'email': email, 'password': password},
     );
 

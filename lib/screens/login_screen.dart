@@ -17,19 +17,19 @@ class _LoginScreenState extends State<LoginScreen> {
   void performLogin() async {
     final isValid = _formKey.currentState?.validate();
     if (isValid == true) {
-      //final userData = await AuthService().login(_username, _password);
+      final userData = await AuthService().login(_username, _password);
       
-      // if (userData != null) {
-      //   final userModel = Provider.of<UserModel>(context, listen: false);
-      //   userModel.setUser(userData);
+      if (userData != null) {
+        final userModel = Provider.of<UserModel>(context, listen: false);
+        userModel.setUser(userData);
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (context) => BottomNavigationExample()),
         );
-      // } else {
-      //   ScaffoldMessenger.of(context).showSnackBar(
-      //     SnackBar(content: Text('Invalid username or password')),
-      //   );
-      // }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Invalid username or password')),
+        );
+      }
     }
   }
 

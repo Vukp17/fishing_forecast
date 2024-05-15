@@ -1,3 +1,4 @@
+import 'package:fishingapp/services/api_contant.dart';
 import 'package:fishingapp/services/auth_service.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
@@ -8,7 +9,7 @@ class SpotService {
   Future<void> saveSpot(String title, DateTime date, String location, String description, File imageFile) async {
     final accessToken = await AuthService().getAccessToken();
     final userId = await AuthService().getUserId();
-    String baseUrl = 'http://164.8.67.107:8000/api/v1/users/$userId/spots';
+    String baseUrl = '$BASE_URL/users/$userId/spots';
 
     var request = http.MultipartRequest('POST', Uri.parse(baseUrl));
 

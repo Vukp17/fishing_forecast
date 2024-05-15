@@ -1,3 +1,4 @@
+import 'package:fishingapp/services/api_contant.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -19,7 +20,7 @@ class WeatherService {
   static Future<List<HourlyWeather>> fetchHourlyWeather() async {
     try {
       final apiUrl =
-          'https://api.open-meteo.com/v1/forecast?latitude=46.55&longitude=15.64&current=temperature_2m,wind_speed_10m&hourly=temperature_2m,relative_humidity_2m,wind_speed_10m';
+          '$WEATHER_URL';
       final response = await http.get(Uri.parse(apiUrl));
 
       if (response.statusCode == 200) {

@@ -15,6 +15,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
+  bool _isRegistering = false; // Add this
+
   bool _obscureText = true;
 
   void _togglePasswordVisibility() {
@@ -24,6 +26,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   }
 
   performRegister() async {
+    setState(() {
+      _isRegistering =
+          true; // Set _isRegistering to true when registration starts
+    });
     final isValid = _formKey.currentState?.validate();
     if (isValid == true) {
       // Use AuthService to register the user
@@ -38,6 +44,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         MaterialPageRoute(builder: (context) => BottomNavigationExample()),
       );
     }
+    setState(() {
+      _isRegistering =
+          true; // Set _isRegistering to true when registration starts
+    });
   }
 
   @override
@@ -150,12 +160,17 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               Container(
                 width: double.infinity,
                 child: ElevatedButton(
-                  child: const Text('Register'),
+                  child: _isRegistering
+                      ? CircularProgressIndicator(
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(Colors.white),
+                        )
+                      : const Text('Register'),
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white,
                     backgroundColor: const Color(0xFF42d9c8), // foreground
                   ),
-                  onPressed: performRegister,
+                  onPressed: _isRegistering ? null : performRegister,
                 ),
               ),
               const SizedBox(height: 20),

@@ -14,6 +14,7 @@ class _LoginScreenState extends State<LoginScreen> {
   var _username = '';
   var _password = '';
   bool _obscureText = true;
+  bool _isLoading = false; // Add this
 
   void _togglePasswordVisibility() {
     setState(() {
@@ -22,6 +23,10 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void performLogin() async {
+    setState(() {
+      _isLoading = true; // Set loading to true when login starts
+    });
+
     final isValid = _formKey.currentState?.validate();
     if (isValid == true) {
       final userData = await AuthService().login(_username, _password);
@@ -38,6 +43,10 @@ class _LoginScreenState extends State<LoginScreen> {
         );
       }
     }
+
+    setState(() {
+      _isLoading = false; // Set loading to false when login ends
+    });
   }
 
   @override
@@ -129,66 +138,73 @@ class _LoginScreenState extends State<LoginScreen> {
                   width: double.infinity,
                   height: 50,
                   child: ElevatedButton(
-                    child: const Text('Login', style: TextStyle(fontSize: 16)),
+                    child: _isLoading
+                        ? CircularProgressIndicator(
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.white),
+                          )
+                        : const Text('Login', style: TextStyle(fontSize: 16)),
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
                       backgroundColor: const Color(0xFF42d9c8), // foreground
                     ),
-                    onPressed: performLogin,
+                    onPressed: _isLoading ? null : performLogin,
                   ),
                 ),
                 const SizedBox(height: 20.0),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.rectangle,
-                      borderRadius: BorderRadius.circular(10.0), // Add this
-                      border: Border.all(
-                        color: Color(0xFF42d9c8),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.rectangle,
+                        borderRadius: BorderRadius.circular(10.0), // Add this
+                        border: Border.all(
+                          color: Color(0xFF42d9c8),
+                        ),
+                      ),
+                      child: IconButton(
+                        icon:
+                            Image.asset('assets/apple_logo.png', height: 18.0),
+                        onPressed: () {
+                          // Handle Google sign in
+                        },
                       ),
                     ),
-                    child: IconButton(
-                      icon: Image.asset('assets/apple_logo.png', height: 18.0),
-                      onPressed: () {
-                        // Handle Google sign in
-                      },
-                    ),
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.rectangle,
-                      borderRadius: BorderRadius.circular(10.0), // Add this
-                      border: Border.all(
-                        color: Color(0xFF42d9c8),
+                    Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.rectangle,
+                        borderRadius: BorderRadius.circular(10.0), // Add this
+                        border: Border.all(
+                          color: Color(0xFF42d9c8),
+                        ),
+                      ),
+                      child: IconButton(
+                        icon:
+                            Image.asset('assets/google_logo.png', height: 18.0),
+                        onPressed: () {
+                          // Handle Apple sign in
+                        },
                       ),
                     ),
-                    child: IconButton(
-                      icon: Image.asset('assets/google_logo.png', height: 18.0),
-                      onPressed: () {
-                        // Handle Apple sign in
-                      },
-                    ),
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.rectangle,
-                      borderRadius: BorderRadius.circular(10.0), // Add this
-                      border: Border.all(
-                        color: Color(0xFF42d9c8),
+                    Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.rectangle,
+                        borderRadius: BorderRadius.circular(10.0), // Add this
+                        border: Border.all(
+                          color: Color(0xFF42d9c8),
+                        ),
+                      ),
+                      child: IconButton(
+                        icon: Image.asset('assets/facebook_logo.png',
+                            height: 18.0),
+                        onPressed: () {
+                          // Handle Facebook sign in
+                        },
                       ),
                     ),
-                    child: IconButton(
-                      icon:
-                          Image.asset('assets/facebook_logo.png', height: 18.0),
-                      onPressed: () {
-                        // Handle Facebook sign in
-                      },
-                    ),
-                  ),
-                ],
-              ),
+                  ],
+                ),
                 const SizedBox(height: 10.0),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(

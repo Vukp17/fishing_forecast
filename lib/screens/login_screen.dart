@@ -182,8 +182,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: IconButton(
                         icon:
                             Image.asset('assets/google_logo.png', height: 18.0),
-                        onPressed: () {
-                          // Handle Apple sign in
+                        onPressed: () async {
+                              await AuthService().googleSignIn();
                         },
                       ),
                     ),

@@ -3,7 +3,7 @@ import 'package:fishingapp/models/user_model.dart';
 import 'package:fishingapp/services/api_contant.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:google_sign_in/google_sign_in.dart';
 class AuthService {
   Future<User?> login(String username, String password) async {
     final response = await http.post(
@@ -84,5 +84,30 @@ class AuthService {
     } else {
       throw Exception('Failed to register user');
     }
+  }
+
+
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
+  Future<GoogleSignInAccount?> googleSignIn() async {
+    final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+    final GoogleSignInAuthentication googleAuth = await googleUser!.authentication;
+
+    // final response = await http.post(
+    //   Uri.parse('$BASE_URL/google-login'),
+    //   body: {'id_token': googleAuth.idToken},
+    // );
+
+    // if (response.statusCode == 200 || response.statusCode == 201) {
+    //   final Map<String, dynamic> responseData = json.decode(response.body);
+    //   final String accessToken = responseData['access_token'];
+
+    //   final SharedPreferences prefs = await SharedPreferences.getInstance();
+    //   await prefs.setString('access_token', accessToken);
+    //   await prefs.setInt('user_id', responseData['user_id']);
+
+    //   return getUserData();
+    // } else {
+    //   throw Exception('Failed to login with Google');
+    // }
   }
 }

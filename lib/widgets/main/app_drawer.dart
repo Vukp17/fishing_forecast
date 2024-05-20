@@ -31,7 +31,8 @@ class AppDrawer extends StatelessWidget {
                 ),
                 accountEmail: Text(userModel.user?.email ?? 'guest@example.com'),
                 currentAccountPicture: const CircleAvatar(
-                  child: FlutterLogo(size: 42.0),
+                  child: Icon(Icons.person),
+                  backgroundColor: Colors.white,
                 ),
               );
             },

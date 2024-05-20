@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:fishingapp/services/api_contant.dart';
 import 'package:fishingapp/services/auth_service.dart';
 import 'package:http/http.dart' as http;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -9,7 +10,7 @@ class MapService {
     final userId = await AuthService().getUserId();
     print(accessToken);
     final response = await http.get(
-      Uri.parse('http://164.8.67.107:8000/api/v1/users/$userId/spots'),
+      Uri.parse('$BASE_URL/users/$userId/spots'),
       headers: {'Authorization': 'Bearer $accessToken'},
     );
 

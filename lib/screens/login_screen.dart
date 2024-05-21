@@ -82,7 +82,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     filled: true,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(25.0),
-                      borderSide: BorderSide(),
+                      borderSide: const BorderSide(),
                     ),
                   ),
                   validator: (value) {
@@ -103,7 +103,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     filled: true,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(25.0),
-                      borderSide: BorderSide(),
+                      borderSide: const BorderSide(),
                     ),
                     suffixIcon: IconButton(
                       icon: Icon(
@@ -126,9 +126,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   },
                 ),
                 const SizedBox(height: 10.0),
-                Align(
+                const Align(
                   alignment: Alignment.centerLeft,
-                  child: const Text(
+                  child: Text(
                     'Forgot password?',
                     style: TextStyle(),
                   ),
@@ -139,7 +139,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   height: 50,
                   child: ElevatedButton(
                     child: _isLoading
-                        ? CircularProgressIndicator(
+                        ? const CircularProgressIndicator(
                             valueColor:
                                 AlwaysStoppedAnimation<Color>(Colors.white),
                           )
@@ -160,7 +160,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         shape: BoxShape.rectangle,
                         borderRadius: BorderRadius.circular(10.0), // Add this
                         border: Border.all(
-                          color: Color(0xFF42d9c8),
+                          color: const Color(0xFF42d9c8),
                         ),
                       ),
                       child: IconButton(
@@ -176,7 +176,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         shape: BoxShape.rectangle,
                         borderRadius: BorderRadius.circular(10.0), // Add this
                         border: Border.all(
-                          color: Color(0xFF42d9c8),
+                          color: const Color(0xFF42d9c8),
                         ),
                       ),
                       child: IconButton(
@@ -192,7 +192,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         shape: BoxShape.rectangle,
                         borderRadius: BorderRadius.circular(10.0), // Add this
                         border: Border.all(
-                          color: Color(0xFF42d9c8),
+                          color: const Color(0xFF42d9c8),
                         ),
                       ),
                       child: IconButton(

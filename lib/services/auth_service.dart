@@ -4,6 +4,7 @@ import 'package:fishingapp/services/api_contant.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+
 class AuthService {
   Future<User?> login(String username, String password) async {
     final response = await http.post(
@@ -86,28 +87,55 @@ class AuthService {
     }
   }
 
+  final GoogleSignIn _googleSignIn = GoogleSignIn( 
+    // clientId: '226519630510-qqjkt4klsv4rputmk2u0fju7363jpb3e.apps.googleusercontent.com',
+    
+    scopes: [
+      'email',
+      'profile',
+      'openid',
 
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
-  Future<GoogleSignInAccount?> googleSignIn() async {
-    final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-    final GoogleSignInAuthentication googleAuth = await googleUser!.authentication;
+    ],
+  );
+  Future<User?> googleSignIn() async {
+    try {
+      await _googleSignIn
+          .signOut(); // Ensure the user is signed out before attempting to sign in again
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      if (googleUser == null) {
+        throw Exception('Google Sign-In was aborted');
+      }
 
-    // final response = await http.post(
-    //   Uri.parse('$BASE_URL/google-login'),
-    //   body: {'id_token': googleAuth.idToken},
-    // );
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+      if (googleAuth.idToken == null) {
+        print(googleAuth.accessToken);
+        throw Exception('Failed to retrieve ID token');
+      }else{
+        print('ID Token: $googleAuth.idToken');
+        print(googleAuth.idToken);
+      }
 
-    // if (response.statusCode == 200 || response.statusCode == 201) {
-    //   final Map<String, dynamic> responseData = json.decode(response.body);
-    //   final String accessToken = responseData['access_token'];
+      final response = await http.post(
+        Uri.parse('$BASE_URL/google-login'),
+        body: {'id_token': googleAuth.idToken},
+      );
 
-    //   final SharedPreferences prefs = await SharedPreferences.getInstance();
-    //   await prefs.setString('access_token', accessToken);
-    //   await prefs.setInt('user_id', responseData['user_id']);
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final Map<String, dynamic> responseData = json.decode(response.body);
+        final String accessToken = responseData['access_token'];
 
-    //   return getUserData();
-    // } else {
-    //   throw Exception('Failed to login with Google');
-    // }
+        final SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString('access_token', accessToken);
+        await prefs.setInt('user_id', responseData['user_id']);
+
+        return getUserData();
+      } else {
+        throw Exception('Failed to login with Google');
+      }
+    } catch (e) {
+      print('Error: $e');
+      return null;
+    }
   }
 }

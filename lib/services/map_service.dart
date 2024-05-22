@@ -32,4 +32,22 @@ class MapService {
       throw Exception('Failed to load spots');
     }
   }
+
+    Future<List> getSpots() async {
+    final accessToken = await AuthService().getAccessToken();
+    final userId = await AuthService().getUserId();
+    print(accessToken);
+    final response = await http.get(
+      Uri.parse('$BASE_URL/users/$userId/spots'),
+      headers: {'Authorization': 'Bearer $accessToken'},
+    );
+
+    if (response.statusCode == 200) {
+      final List spots = json.decode(response.body);
+      return spots;
+    } else {
+      print(response.statusCode);
+      throw Exception('Failed to load spots');
+    }
+  }
 }

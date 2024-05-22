@@ -19,6 +19,7 @@ class _LogCatchScreenState extends State<LogCatchScreen> {
   DateTime _date = DateTime.now();
   String lat = '';
   String lng = '';
+  bool _isLoading = false;
   final _titleController = TextEditingController();
   final _dateController = TextEditingController();
   final _descriptionController = TextEditingController();
@@ -34,31 +35,6 @@ class _LogCatchScreenState extends State<LogCatchScreen> {
       setState(() {
         _date = picked;
       });
-  }
-
-  saveSpot() async {
-    final title = _titleController.text;
-    final date = _dateController.text;
-    final description = _descriptionController.text;
-    // final location = _locationController.text;
-
-    // final position = await Geolocator.getCurrentPosition();
-    // final latitude = position.latitude;
-    // final longitude = position.longitude;
-
-    print('Title: $title');
-    print('Date: $_date');
-    print('Description: $description');
-    final spot = await SpotService().saveSpot(
-      title,
-      _date,
-      lng,
-      lat,
-      description,
-      widget.imageFile,
-    );
-    // print('Latitude: $latitude');
-    // print('Longitude: $longitude');
   }
 
   Future<void> _selectLocation() async {
@@ -77,6 +53,35 @@ class _LogCatchScreenState extends State<LogCatchScreen> {
     }
   }
 
+  Future<bool> saveSpot() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    final title = _titleController.text;
+    final date = _dateController.text;
+    final description = _descriptionController.text;
+
+    try {
+      final spot = await SpotService().saveSpot(
+        title,
+        _date,
+        lng,
+        lat,
+        description,
+        widget.imageFile,
+      );
+      return true;
+    } catch (e) {
+      print('Error saving spot: $e');
+      return false;
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -90,44 +95,93 @@ class _LogCatchScreenState extends State<LogCatchScreen> {
             children: <Widget>[
               Image.file(
                 widget.imageFile,
-                height: 200, // Set the height of the image
-                width: 200, // Set the width of the image
-                fit: BoxFit
-                    .cover, // Use BoxFit.cover to maintain the aspect ratio of the image
+                height: 200,
+                width: 200,
+                fit: BoxFit.cover,
               ),
-              TextField(
+              const SizedBox(height: 20.0),
+              TextFormField(
                 controller: _titleController,
                 decoration: InputDecoration(
                   labelText: 'Title',
+                  fillColor: Colors.white,
+                  filled: true,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(25.0),
+                    borderSide: const BorderSide(),
+                  ),
                 ),
               ),
-              TextField(
+              const SizedBox(height: 20.0),
+              TextFormField(
                 controller: _dateController,
                 decoration: InputDecoration(
                   labelText: DateFormat.yMMMd().format(_date),
+                  fillColor: Colors.white,
+                  filled: true,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(25.0),
+                    borderSide: const BorderSide(),
+                  ),
                 ),
                 onTap: () => _selectDate(context),
               ),
-              TextField(
+              const SizedBox(height: 20.0),
+              TextFormField(
                 controller: _descriptionController,
                 decoration: InputDecoration(
                   labelText: 'Description',
+                  fillColor: Colors.white,
+                  filled: true,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(25.0),
+                    borderSide: const BorderSide(),
+                  ),
                 ),
               ),
-              TextField(
+              const SizedBox(height: 20.0),
+              TextFormField(
                 controller: _locationController,
                 decoration: InputDecoration(
                   labelText: 'Location: $lat, $lng',
+                  fillColor: Colors.white,
+                  filled: true,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(25.0),
+                    borderSide: const BorderSide(),
+                  ),
                 ),
                 onTap: _selectLocation,
               ),
+              const SizedBox(height: 20.0),
               ElevatedButton(
-                onPressed: () {
-                  // Save the catch
-                  saveSpot();
-                },
-                child: Text('Save Catch'),
-              ),
+                onPressed: _isLoading
+                    ? null
+                    : () async {
+                        // Save the catch
+                        bool success = await saveSpot();
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(success
+                                ? 'Catch saved successfully'
+                                : 'Error saving catch'),
+                            backgroundColor:
+                                success ? Colors.green : Colors.red,
+                          ),
+                        );
+                        if (success) {
+                          // Navigate back to the map screen and zoom in on the picker
+                          Navigator.pop(context);
+                          // Add your code here to zoom in on the picker
+                        }
+                      },
+                child: _isLoading
+                    ? CircularProgressIndicator(color: Colors.white)
+                    : Text('Save Catch'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color(0xFF42d9c8), // Set the button color
+                ),
+              )
             ],
           ),
         ),

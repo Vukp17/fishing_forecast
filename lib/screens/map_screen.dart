@@ -1,6 +1,9 @@
+import 'package:fishingapp/services/api_contant.dart';
+import 'package:fishingapp/services/auth_service.dart';
 import 'package:fishingapp/services/map_service.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:http/http.dart' as http;
 
 class MapScreen extends StatefulWidget {
   @override
@@ -10,12 +13,52 @@ class MapScreen extends StatefulWidget {
 class _MapScreenState extends State<MapScreen> {
   final Set<Marker> _markers = {};
   bool _showImage = false;
-void _onMapCreated(GoogleMapController controller) async {
-  final markers = await MapService().getMarkers();
-  setState(() {
-    _markers.addAll(markers);
-  });
-}
+  
+  void _onMapCreated(GoogleMapController controller) async {
+    final spots = await MapService().getSpots();
+    setState(() {
+      _markers.addAll(spots.map((spot) {
+        return Marker(
+          markerId: MarkerId(spot['id'].toString()),
+          position:
+              LatLng(double.parse(spot['lat']), double.parse(spot['lng'])),
+          infoWindow: InfoWindow(
+            title: spot['name'],
+            snippet: 'Description: ${spot['description']}',
+          ),
+          onTap: () async {
+            final accessToken = await AuthService().getAccessToken();
+            final response = await http.get(
+              Uri.parse('$BASE_URL/images${spot['image_id']}'),
+              headers: {'Authorization': 'Bearer $accessToken'},
+            );
+
+            if (response.statusCode == 200) {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title: Text('Image ID: ${spot['image_id']}'),
+                    content: Image.memory(response.bodyBytes),
+                    actions: <Widget>[
+                      TextButton(
+                        child: Text('OK'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
+                  );
+                },
+              );
+            } else {
+              print('Failed to load image: ${response.statusCode}');
+            }
+          },
+        );
+      }).toSet());
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

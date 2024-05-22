@@ -6,7 +6,7 @@ import 'dart:convert';
 import 'dart:io';
 
 class SpotService {
-  Future<void> saveSpot(String title, DateTime date, String location,
+  Future<void> saveSpot(String title, DateTime date, String lng, String lat,
       String description, File imageFile) async {
     try {
       final accessToken = await AuthService().getAccessToken();
@@ -22,15 +22,8 @@ class SpotService {
 
       request.fields['title'] = title;
       request.fields['date'] = date.toString();
-      request.fields['location'] = location;
-      var locationParts = location.split(',');
-
-      // var lat = locationParts[0].trim();
-      // var lng = locationParts[1].trim();
-
-      request.fields['location'] = location;
-      // request.fields['lng'] = lng;
-      // print('Location: $lat, $lng');
+      request.fields['lat'] = lat;
+      request.fields['lng'] = lng;
       request.fields['description'] = description;
 
       request.files.add(await http.MultipartFile.fromPath(

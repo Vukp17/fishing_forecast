@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:io';
 import 'package:intl/intl.dart';
-import 'package:geolocator/geolocator.dart';
+// import 'package:geolocator/geolocator.dart';
 
 class LogCatchScreen extends StatefulWidget {
   final File imageFile;
-  
+
   LogCatchScreen({required this.imageFile});
 
   @override
@@ -17,11 +17,12 @@ class LogCatchScreen extends StatefulWidget {
 
 class _LogCatchScreenState extends State<LogCatchScreen> {
   DateTime _date = DateTime.now();
-  String _location = '';
-  final  _titleController = TextEditingController();
-  final  _dateController = TextEditingController();
-  final  _descriptionController = TextEditingController();
-  final  _locationController = TextEditingController();
+  String lat = '';
+  String lng = '';
+  final _titleController = TextEditingController();
+  final _dateController = TextEditingController();
+  final _descriptionController = TextEditingController();
+  final _locationController = TextEditingController();
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -34,11 +35,12 @@ class _LogCatchScreenState extends State<LogCatchScreen> {
         _date = picked;
       });
   }
-   saveSpot() async {
+
+  saveSpot() async {
     final title = _titleController.text;
     final date = _dateController.text;
     final description = _descriptionController.text;
-    final location = _locationController.text;
+    // final location = _locationController.text;
 
     // final position = await Geolocator.getCurrentPosition();
     // final latitude = position.latitude;
@@ -47,20 +49,18 @@ class _LogCatchScreenState extends State<LogCatchScreen> {
     print('Title: $title');
     print('Date: $_date');
     print('Description: $description');
-    print('Location: $_location');
-    final spot =  await SpotService().saveSpot(
+    final spot = await SpotService().saveSpot(
       title,
       _date,
+      lng,
+      lat,
       description,
-     _location,
       widget.imageFile,
     );
     // print('Latitude: $latitude');
     // print('Longitude: $longitude');
+  }
 
-
-
-   }
   Future<void> _selectLocation() async {
     LatLng selectedLocation = await Navigator.push(
       context,
@@ -71,7 +71,8 @@ class _LogCatchScreenState extends State<LogCatchScreen> {
 
     if (selectedLocation != null) {
       setState(() {
-        _location = '${selectedLocation.latitude}, ${selectedLocation.longitude}';
+        lat = selectedLocation.latitude.toString();
+        lng = selectedLocation.longitude.toString();
       });
     }
   }
@@ -116,7 +117,7 @@ class _LogCatchScreenState extends State<LogCatchScreen> {
               TextField(
                 controller: _locationController,
                 decoration: InputDecoration(
-                  labelText: _location,
+                  labelText: 'Location: $lat, $lng',
                 ),
                 onTap: _selectLocation,
               ),

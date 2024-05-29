@@ -26,35 +26,55 @@ class _MapScreenState extends State<MapScreen> {
             title: spot['name'],
             snippet: 'Description: ${spot['description']}',
           ),
-          onTap: () async {
+            onTap: () async {
             final accessToken = await AuthService().getAccessToken();
-            final response = await http.get(
-              Uri.parse('$BASE_URL/images${spot['image_id']}'),
+            if (!spot['image_id'].startsWith('http') && !spot['image_id'].startsWith('https')) {
+              final response = await http.get(
+              Uri.parse('$BASE_URL/images/${spot['image_id']}'),
               headers: {'Authorization': 'Bearer $accessToken'},
-            );
-
-            if (response.statusCode == 200) {
+              );
+              print(accessToken);
+              if (response.statusCode == 200) {
               showDialog(
                 context: context,
                 builder: (context) {
-                  return AlertDialog(
-                    title: Text('Image ID: ${spot['image_id']}'),
-                    content: Image.memory(response.bodyBytes),
-                    actions: <Widget>[
-                      TextButton(
-                        child: Text('OK'),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                    ],
-                  );
+                return AlertDialog(
+                  title: Text('Description: ${spot['description']}'),
+                  content: Image.memory(response.bodyBytes),
+                  actions: <Widget>[
+                  TextButton(
+                    child: Text('OK'),
+                    onPressed: () {
+                    Navigator.of(context).pop();
+                    },
+                  ),
+                  ],
+                );
                 },
               );
+              } else {
+              print('Failed to load image: ${response.statusCode} , ${response.body}');
+              }
             } else {
-              print('Failed to load image: ${response.statusCode}');
+              showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                title: Text('Description: ${spot['description']}'),
+                content: Image.network(spot['image_id']),
+                actions: <Widget>[
+                  TextButton(
+                  child: Text('OK'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  ),
+                ],
+                );
+              },
+              );
             }
-          },
+            },
         );
       }).toSet());
     });

@@ -1,4 +1,5 @@
 import 'package:fishingapp/models/user_model.dart';
+import 'package:fishingapp/screens/history_catches_screen.dart';
 import 'package:flag/flag.dart';
 import 'package:flag/flag_widget.dart';
 import 'package:flutter/material.dart';
@@ -79,15 +80,16 @@ class AppDrawer extends StatelessWidget {
               // Add more languages here
             ],
           ),
-          ListTile(
+            ListTile(
             leading: const Icon(Icons.history),
             title: const Text('History of Catches'),
             onTap: () {
-              // Update the state of the app
-              // Then close the drawer
-              Navigator.pop(context);
+              Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => HistoryCatchesScreen()),
+              );
             },
-          ),
+            ),
         ],
       ),
     );

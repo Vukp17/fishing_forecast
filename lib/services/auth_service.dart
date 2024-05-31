@@ -47,6 +47,7 @@ class AuthService {
   }
 
   Future<User> getUserData() async {
+    print('Test');
     final String? accessToken = await getAccessToken();
 
     if (accessToken != null) {
@@ -106,19 +107,20 @@ class AuthService {
         throw Exception('Google Sign-In was aborted');
       }
 
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
-      if (googleAuth.idToken == null) {
-        print(googleAuth.accessToken);
-        throw Exception('Failed to retrieve ID token');
-      }else{
-        print('ID Token: $googleAuth.idToken');
-        print(googleAuth.idToken);
-      }
+      final GoogleSignInAuthentication googleAuth =await googleUser.authentication;
+
+
+      // if (googleAuth.idToken == null) {
+      //   print(googleAuth.accessToken);
+      //   throw Exception('Failed to retrieve ID token');
+      // }else{
+      //   print('ID Token: $googleAuth.idToken');
+      //   print(googleAuth.idToken);
+      // }
 
       final response = await http.post(
         Uri.parse('$BASE_URL/google-login'),
-        body: {'id_token': googleAuth.idToken},
+        body: {'username': googleUser.displayName,'email': googleUser.email},
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
@@ -131,7 +133,7 @@ class AuthService {
 
         return getUserData();
       } else {
-        throw Exception('Failed to login with Google');
+        throw Exception('Failed to login with Google ${response.statusCode}, response: ${response.body}');
       }
     } catch (e) {
       print('Error: $e');

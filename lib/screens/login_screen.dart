@@ -48,6 +48,22 @@ class _LoginScreenState extends State<LoginScreen> {
       _isLoading = false; // Set loading to false when login ends
     });
   }
+  void googleSignIn() async {
+   final userData = await AuthService().googleSignIn();
+
+      if (userData != null) {
+        final userModel = Provider.of<UserModel>(context, listen: false);
+        userModel.setUser(userData);
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => BottomNavigationExample()),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Invalid username or password')),
+        );
+      }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -183,7 +199,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         icon:
                             Image.asset('assets/google_logo.png', height: 18.0),
                         onPressed: () async {
-                              await AuthService().googleSignIn();
+                              googleSignIn();
                         },
                       ),
                     ),

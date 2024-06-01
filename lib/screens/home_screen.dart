@@ -92,11 +92,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 right: 8.0,
                 child: Container(
                 padding: const EdgeInsets.all(4.0),
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: Colors.red,
                   shape: BoxShape.circle,
                 ),
-                child: Text(
+                child: const Text(
                   '5', // Replace with the actual number of notifications
                   style: TextStyle(
                   color: Colors.white,
@@ -126,10 +126,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Text(
                     AppLocalizations.of(context)!.locations,
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                 ),
                 Container(

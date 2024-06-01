@@ -64,4 +64,22 @@ class SpotService {
       throw Exception('Failed to load spots');
     }
   }
+  Future<List<Catch>> getAllSpots() async {
+    final accessToken = await AuthService().getAccessToken();
+    final response = await http.get(
+      Uri.parse('$BASE_URL/spots'),
+      headers: {'Authorization': 'Bearer $accessToken'},
+    );
+    if(response.statusCode == 200){
+      final List<dynamic> spots = json.decode(response.body);
+      print(spots[0 ]);
+      List<Catch> catchList = spots.map((spot) => Catch.fromJson(spot)).toList();
+      return catchList;
+
+  }else{
+    print(response.statusCode);
+    throw Exception('Failed to load spots');
+
+  }
+  }
 }

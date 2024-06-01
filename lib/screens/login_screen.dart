@@ -15,6 +15,7 @@ class _LoginScreenState extends State<LoginScreen> {
   var _password = '';
   bool _obscureText = true;
   bool _isLoading = false; // Add this
+  bool _isGoogleLoading = false; // Add this
 
   void _togglePasswordVisibility() {
     setState(() {
@@ -48,22 +49,30 @@ class _LoginScreenState extends State<LoginScreen> {
       _isLoading = false; // Set loading to false when login ends
     });
   }
+
   void googleSignIn() async {
-   final userData = await AuthService().googleSignIn();
+    setState(() {
+      _isGoogleLoading = true; // Set Google loading to true when login starts
+    });
 
-      if (userData != null) {
-        final userModel = Provider.of<UserModel>(context, listen: false);
-        userModel.setUser(userData);
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => BottomNavigationExample()),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Invalid username or password')),
-        );
-      }
+    final userData = await AuthService().googleSignIn();
+
+    if (userData != null) {
+      final userModel = Provider.of<UserModel>(context, listen: false);
+      userModel.setUser(userData);
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => BottomNavigationExample()),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Failed to login with Google')),
+      );
+    }
+
+    setState(() {
+      _isGoogleLoading = false; // Set Google loading to false when login ends
+    });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -154,17 +163,17 @@ class _LoginScreenState extends State<LoginScreen> {
                   width: double.infinity,
                   height: 50,
                   child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: const Color(0xFF42d9c8), // foreground
+                    ),
+                    onPressed: _isLoading ? null : performLogin,
                     child: _isLoading
                         ? const CircularProgressIndicator(
                             valueColor:
                                 AlwaysStoppedAnimation<Color>(Colors.white),
                           )
                         : const Text('Login', style: TextStyle(fontSize: 16)),
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      backgroundColor: const Color(0xFF42d9c8), // foreground
-                    ),
-                    onPressed: _isLoading ? null : performLogin,
                   ),
                 ),
                 const SizedBox(height: 20.0),
@@ -196,11 +205,13 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                       child: IconButton(
-                        icon:
-                            Image.asset('assets/google_logo.png', height: 18.0),
-                        onPressed: () async {
-                              googleSignIn();
-                        },
+                        icon: _isGoogleLoading // Add this line
+                            ? const CircularProgressIndicator() // Add this line
+                            : Image.asset('assets/google_logo.png',
+                                height: 18.0),
+                        onPressed: _isGoogleLoading
+                            ? null
+                            : googleSignIn, // Add this line
                       ),
                     ),
                     Container(
@@ -233,6 +244,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     // Handle account creation
                   },
                 ),
+                // Add this line
               ],
             ),
           ),

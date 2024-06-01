@@ -1,9 +1,9 @@
 import 'dart:io';
 
+import 'package:fishingapp/screens/feed_screen.dart';
 import 'package:fishingapp/screens/home_screen.dart';
 import 'package:fishingapp/screens/log_catch.dart';
 import 'package:fishingapp/screens/map_screen.dart';
-import 'package:fishingapp/screens/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -19,7 +19,7 @@ class _BottomNavigationExampleState extends State<BottomNavigationExample> {
   final List<Widget> _screens = [
     HomeScreen(),
     MapScreen(),
-    ProfileScreen(),
+    FeedScreen(),
   ];
 
   @override
@@ -39,6 +39,7 @@ class _BottomNavigationExampleState extends State<BottomNavigationExample> {
               ),
             );
           } else {
+            // ignore: avoid_print
             print('No image selected.');
           }
         },
@@ -68,8 +69,8 @@ class _BottomNavigationExampleState extends State<BottomNavigationExample> {
                 backgroundColor: Colors.white
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.person),
-                label: 'Profile',
+                icon: Icon(Icons.feed),
+                label: 'Feed',
               ),
             ],
             backgroundColor: Colors.white,

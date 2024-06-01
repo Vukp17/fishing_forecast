@@ -1,3 +1,5 @@
+import 'package:fishingapp/models/user_model.dart';
+
 class Catch {
   final String imageId;
   final String description;
@@ -7,6 +9,7 @@ class Catch {
   final String lat;
   final String lng;
   final int user_id;
+  final User? user;
 
   Catch({
     required this.imageId,
@@ -17,6 +20,7 @@ class Catch {
     required this.lat,
     required this.lng,
     required this.user_id,
+    this.user,
   });
 
   factory Catch.fromJson(Map<String, dynamic> json) {
@@ -29,6 +33,7 @@ class Catch {
       lat: json['lat'],
       lng: json['lng'],
       user_id: json['user_id'],
+      user: json['user'] != null ? User.fromJson(json['user']) : null,
     );
   }
 }

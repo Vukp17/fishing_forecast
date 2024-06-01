@@ -1,4 +1,3 @@
-
 import 'package:fishingapp/models/user_model.dart';
 import 'package:fishingapp/services/auth_service.dart';
 import 'package:fishingapp/widgets/main/app_drawer.dart';
@@ -26,9 +25,9 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     _fetchHourlyWeather();
-        loadUserData();
-
+    loadUserData();
   }
+
   Future<void> loadUserData() async {
     try {
       final userData = await AuthService().getUserData();
@@ -39,6 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
       print('Failed to load user data: $e');
     }
   }
+
   Future<void> _fetchHourlyWeather() async {
     setState(() {
       _isLoading = true;
@@ -63,16 +63,55 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title:  Text(AppLocalizations.of(context)!.fishingSpots),
+        title: Text(AppLocalizations.of(context)!.fishingSpots),
         leading: Builder(
           builder: (context) => IconButton(
             icon: const Icon(Icons.menu),
             onPressed: () => Scaffold.of(context).openDrawer(),
           ),
         ),
+        actions: [
+            Container(
+            margin: const EdgeInsets.only(right: 16.0),
+            decoration: BoxDecoration(
+              color: const Color(0xFF42d9c8),
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+              IconButton(
+                icon: const Icon(Icons.notifications),
+                color: Colors.white,
+                onPressed: () {
+                // Implement your notification logic here
+                },
+              ),
+              Positioned(
+                top: 8.0,
+                right: 8.0,
+                child: Container(
+                padding: const EdgeInsets.all(4.0),
+                decoration: BoxDecoration(
+                  color: Colors.red,
+                  shape: BoxShape.circle,
+                ),
+                child: Text(
+                  '5', // Replace with the actual number of notifications
+                  style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.bold,
+                  ),
+                ),
+                ),
+              ),
+              ],
+            ),
+            ),
+        ],
       ),
       drawer: AppDrawer(),
-
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : Column(
@@ -82,10 +121,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   padding: const EdgeInsets.all(16.0),
                   child: TemperatureCard(
                     hourlyWeatherList:
-                        _hourlyWeather.isNotEmpty ? _hourlyWeather : [], currentLocation: 'New York',
+                        _hourlyWeather.isNotEmpty ? _hourlyWeather : [],
+                    currentLocation: 'Maribor',
                   ),
                 ),
-                 Padding(
+                Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16.0),
                   child: Text(
                     AppLocalizations.of(context)!.locations,

@@ -1,3 +1,4 @@
+import 'package:fishingapp/models/spot_model.dart';
 import 'package:fishingapp/services/api_contant.dart';
 import 'package:fishingapp/services/auth_service.dart';
 import 'package:http/http.dart' as http;
@@ -42,6 +43,25 @@ class SpotService {
       }
     } catch (e) {
       print('Error: $e');
+    }
+  }
+
+  Future<List<Catch>> getSpots() async {
+    final accessToken = await AuthService().getAccessToken();
+    final userId = await AuthService().getUserId();
+    print(accessToken);
+    final response = await http.get(
+      Uri.parse('$BASE_URL/users/$userId/spots'),
+      headers: {'Authorization': 'Bearer $accessToken'},
+    );
+
+    if (response.statusCode == 200) {
+      final List<dynamic> spots = json.decode(response.body);
+      List<Catch> catchList = spots.map((spot) => Catch.fromJson(spot)).toList();
+      return catchList;
+    } else {
+      print(response.statusCode);
+      throw Exception('Failed to load spots');
     }
   }
 }

@@ -2,7 +2,6 @@ import 'package:fishingapp/models/spot_model.dart';
 import 'package:fishingapp/services/spot_service.dart';
 import 'package:flutter/material.dart';
 
-
 class FeedScreen extends StatefulWidget {
   @override
   _FeedScreenState createState() => _FeedScreenState();
@@ -45,7 +44,8 @@ class _FeedScreenState extends State<FeedScreen> {
                     children: <Widget>[
                       ListTile(
                         leading: Icon(Icons.person),
-                        title: Text(catchItem!.user?.username ?? 'Unknown User'),
+                        title:
+                            Text(catchItem!.user?.username ?? 'Unknown User'),
                       ),
                       Image.network(
                         catchItem.imageId,
@@ -56,19 +56,44 @@ class _FeedScreenState extends State<FeedScreen> {
                       Padding(
                         padding: const EdgeInsets.all(16.0),
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text(
-                              catchItem.name,
-                              style: const TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                catchItem.name,
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
-                            ),
-                            const SizedBox(height: 10),
-                            Text(catchItem.description),
-                          ],
-                        ),
+                              const SizedBox(height: 10),
+                              Text(
+                                catchItem.description.length > 50
+                                    ? '${catchItem.description.substring(0, 50)}... (more)'
+                                    : catchItem.description,
+                              ),
+                              const SizedBox(height: 10),
+                              if (catchItem.description.length > 50)
+                                TextButton(
+                                  onPressed: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) => AlertDialog(
+                                        title: const Text('Description'),
+                                        content: Text(catchItem.description),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                            },
+                                            child: const Text('Close'),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                  child: const Text('Read more'),
+                                ),
+                            ]),
                       ),
                     ],
                   ),

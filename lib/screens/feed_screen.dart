@@ -3,6 +3,7 @@ import 'package:fishingapp/services/spot_service.dart';
 import 'package:fishingapp/widgets/feed/feed_card.dart';
 import 'package:flutter/material.dart';
 
+
 class FeedScreen extends StatefulWidget {
   @override
   _FeedScreenState createState() => _FeedScreenState();
@@ -59,18 +60,31 @@ class _FeedScreenState extends State<FeedScreen> {
       ),
       body: _isLoading && catches.isEmpty
           ? Center(child: CircularProgressIndicator())
-          : ListView.builder(
-              controller: _scrollController,
-              itemCount: catches.length + (_isLoading ? 1 : 0),
-              itemBuilder: (context, index) {
-                if (index == catches.length) {
-                  return Center(child: CircularProgressIndicator());
-                } else {
-                  final catchItem = catches[index];
-                  return FeedCard(catchItem: catchItem);
-                }
-              },
-            ),
+          : FeedListView(catches: catches, controller: _scrollController, isLoading: _isLoading),
+    );
+  }
+}
+
+class FeedListView extends StatelessWidget {
+  final List<Catch> catches;
+  final ScrollController controller;
+  final bool isLoading;
+
+  FeedListView({required this.catches, required this.controller, required this.isLoading});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      controller: controller,
+      itemCount: catches.length + (isLoading ? 1 : 0),
+      itemBuilder: (context, index) {
+        if (index == catches.length) {
+          return Center(child: CircularProgressIndicator());
+        } else {
+          final catchItem = catches[index];
+          return FeedCard(catchItem: catchItem);
+        }
+      },
     );
   }
 }

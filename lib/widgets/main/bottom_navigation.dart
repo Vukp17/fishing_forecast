@@ -51,34 +51,35 @@ class _BottomNavigationExampleState extends State<BottomNavigationExample> {
         padding: const EdgeInsets.symmetric(vertical: 10),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(30),
-          child: BottomNavigationBar(
-            currentIndex: _currentIndex,
-            onTap: (index) {
-              setState(() {
-                _currentIndex = index;
-              });
-            },
-            items: const [
-              BottomNavigationBarItem(
-                icon: Icon(Icons.home),
-                label: 'Home',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.map),
-                label: 'Map',
-                backgroundColor: Colors.white
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.feed),
-                label: 'Feed',
-              ),
-            ],
-            backgroundColor: Colors.white,
-            elevation: 5,
-            selectedItemColor:  const Color(0xFF40d3c3),// Set the color here
-            unselectedItemColor: Colors.grey, // Set the color for unselected items here
-
-
+          child: Material(
+            elevation: 5.0, // This adds a shadow
+            child: BottomNavigationBar(
+              currentIndex: _currentIndex,
+              onTap: (index) {
+                setState(() {
+                  _currentIndex = index;
+                });
+              },
+              items: const [
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.home),
+                  label: 'Home',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.map),
+                  label: 'Map',
+                  backgroundColor: Colors.white
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.feed),
+                  label: 'Feed',
+                ),
+              ],
+              backgroundColor: Colors.white,
+              elevation: 0, // Remove the elevation from the BottomNavigationBar itself
+              selectedItemColor:  const Color(0xFF40d3c3),
+              unselectedItemColor: Colors.grey,
+            ),
           ),
         ),
       ),

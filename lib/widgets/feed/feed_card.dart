@@ -20,12 +20,21 @@ class FeedCard extends StatelessWidget {
             leading: Icon(Icons.person),
             title: Text(catchItem.user?.username ?? 'Unknown User'),
           ),
-          Image.network(
-            catchItem.imageId,
-            fit: BoxFit.cover,
-            width: double.infinity,
-            height: 200,
-          ),
+            Stack(
+            children: [
+              Image.network(
+              catchItem.imageId,
+              fit: BoxFit.cover,
+              width: double.infinity,
+              height: 200,
+              errorBuilder: (context, error, stackTrace) => const Text('Image not found'),
+              ),
+              if (catchItem.imageId == null)
+              Center(
+                child: CircularProgressIndicator(),
+              ),
+            ],
+            ),
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(

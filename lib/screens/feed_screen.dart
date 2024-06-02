@@ -9,12 +9,46 @@ class FeedScreen extends StatefulWidget {
 }
 
 class _FeedScreenState extends State<FeedScreen> {
-  late Future<List<Catch>> futureCatches;
+  List<Catch> catches = [];
+  ScrollController _scrollController = ScrollController();
+  bool _isLoading = false;
+  int _currentPage = 1;
 
   @override
   void initState() {
     super.initState();
-    futureCatches = SpotService().getAllSpots();
+    _loadData();
+    _scrollController.addListener(_scrollListener);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _scrollListener() {
+    if (_scrollController.offset >=
+            _scrollController.position.maxScrollExtent &&
+        !_scrollController.position.outOfRange) {
+      _loadData();
+    }
+  }
+
+  void _loadData() async {
+    if (!_isLoading) {
+      setState(() {
+        _isLoading = true;
+      });
+
+      List<Catch> newCatches = await SpotService().getMoreSpots(_currentPage);
+
+      setState(() {
+        catches.addAll(newCatches);
+        _currentPage++;
+        _isLoading = false;
+      });
+    }
   }
 
   @override
@@ -23,24 +57,20 @@ class _FeedScreenState extends State<FeedScreen> {
       appBar: AppBar(
         title: const Text('Feed'),
       ),
-      body: FutureBuilder<List<Catch>>(
-        future: futureCatches,
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return const Center(child: Text('An error has occurred!'));
-          } else if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else {
-            return ListView.builder(
-              itemCount: snapshot.data?.length,
+      body: _isLoading && catches.isEmpty
+          ? Center(child: CircularProgressIndicator())
+          : ListView.builder(
+              controller: _scrollController,
+              itemCount: catches.length + (_isLoading ? 1 : 0),
               itemBuilder: (context, index) {
-                final catchItem = snapshot.data?[index];
-                return FeedCard(catchItem: catchItem!);
+                if (index == catches.length) {
+                  return Center(child: CircularProgressIndicator());
+                } else {
+                  final catchItem = catches[index];
+                  return FeedCard(catchItem: catchItem);
+                }
               },
-            );
-          }
-        },
-      ),
+            ),
     );
   }
 }

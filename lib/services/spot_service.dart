@@ -57,29 +57,50 @@ class SpotService {
 
     if (response.statusCode == 200) {
       final List<dynamic> spots = json.decode(response.body);
-      List<Catch> catchList = spots.map((spot) => Catch.fromJson(spot)).toList();
+      List<Catch> catchList =
+          spots.map((spot) => Catch.fromJson(spot)).toList();
       return catchList;
     } else {
       print(response.statusCode);
       throw Exception('Failed to load spots');
     }
   }
-  Future<List<Catch>> getAllSpots() async {
+
+  Future<List<Catch>> getAllSpots({int page = 1}) async {
     final accessToken = await AuthService().getAccessToken();
+    print('Access token: $accessToken');
     final response = await http.get(
-      Uri.parse('$BASE_URL/spots'),
+      Uri.parse('$BASE_URL/spots?page=$page'),
       headers: {'Authorization': 'Bearer $accessToken'},
     );
-    if(response.statusCode == 200){
-      final List<dynamic> spots = json.decode(response.body);
-      print(spots[0 ]);
-      List<Catch> catchList = spots.map((spot) => Catch.fromJson(spot)).toList();
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> responseData = json.decode(response.body);
+      final List<dynamic> spots = responseData['data'];
+      print(spots[0]);
+      List<Catch> catchList =
+          spots.map((spot) => Catch.fromJson(spot)).toList();
       return catchList;
-
-  }else{
-    print(response.statusCode);
-    throw Exception('Failed to load spots');
-
+    } else {
+      print(response.statusCode);
+      throw Exception('Failed to load spots');
+    }
   }
+
+  Future<List<Catch>> getMoreSpots(int page) async {
+    final accessToken = await AuthService().getAccessToken();
+    final response = await http.get(
+      Uri.parse('$BASE_URL/spots?page=$page'),
+      headers: {'Authorization': 'Bearer $accessToken'},
+    );
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> responseData = json.decode(response.body);
+      final List<dynamic> spots = responseData['data'];
+      List<Catch> catchList =
+          spots.map((spot) => Catch.fromJson(spot)).toList();
+      return catchList;
+    } else {
+      print(response.statusCode);
+      throw Exception('Failed to load spots');
+    }
   }
 }

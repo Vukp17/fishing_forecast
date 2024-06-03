@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:fishingapp/models/spot_model.dart';
 import 'package:fishingapp/services/api_contant.dart';
 import 'package:fishingapp/services/auth_service.dart';
 import 'package:http/http.dart' as http;
@@ -33,7 +34,7 @@ class MapService {
     }
   }
 
-    Future<List> getSpots() async {
+  Future<List<Catch>> getSpots() async {
     final accessToken = await AuthService().getAccessToken();
     final userId = await AuthService().getUserId();
     print(accessToken);
@@ -44,10 +45,26 @@ class MapService {
 
     if (response.statusCode == 200) {
       final List spots = json.decode(response.body);
-      return spots;
+      return spots.map((spot) => Catch.fromJson(spot)).toList();
     } else {
       print(response.statusCode);
       throw Exception('Failed to load spots');
     }
   }
+
+  Future<List<Catch>> getAllSpots() async {
+    final accessToken = await AuthService().getAccessToken();
+    final response = await http.get(
+      Uri.parse('$BASE_URL/spots?all=true'),
+      headers: {'Authorization': 'Bearer $accessToken'},
+    );
+    if(response.statusCode == 200 || response.statusCode == 201) {
+      final List spots = json.decode(response.body);
+      return spots.map((spot) => Catch.fromJson(spot)).toList();
+    } else {
+      print("Failed to load spots ${response.statusCode} ${response.body}");
+      throw Exception('Failed to load spots');
+    }
+  }
+
 }

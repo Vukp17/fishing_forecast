@@ -10,7 +10,7 @@ class Catch {
   final String lng;
   final int user_id;
   final User? user;
-
+  final int id;
   Catch({
     required this.imageId,
     required this.description,
@@ -21,6 +21,7 @@ class Catch {
     required this.lng,
     required this.user_id,
     this.user,
+    required this.id,
   });
 
   factory Catch.fromJson(Map<String, dynamic> json) {
@@ -34,6 +35,7 @@ class Catch {
       lng: json['lng'],
       user_id: json['user_id'],
       user: json['user'] != null ? User.fromJson(json['user']) : null,
+      id: json['id'],
     );
   }
 }

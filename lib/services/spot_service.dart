@@ -76,7 +76,6 @@ class SpotService {
     if (response.statusCode == 200) {
       final Map<String, dynamic> responseData = json.decode(response.body);
       final List<dynamic> spots = responseData['data'];
-      print(spots[0]);
       List<Catch> catchList =
           spots.map((spot) => Catch.fromJson(spot)).toList();
       return catchList;

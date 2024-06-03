@@ -1,5 +1,6 @@
 import 'package:fishingapp/models/user_model.dart';
 import 'package:fishingapp/screens/history_catches_screen.dart';
+import 'package:fishingapp/screens/profile_screen.dart';
 import 'package:flag/flag.dart';
 import 'package:flag/flag_widget.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +9,6 @@ import 'package:fishingapp/providers/language_provider.dart';
 
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-
 class AppDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -16,6 +16,23 @@ class AppDrawer extends StatelessWidget {
       child: ListView(
         padding: EdgeInsets.zero,
         children: <Widget>[
+          Consumer<UserModel>(
+            builder: (context, userModel, child) {
+              return ListTile(
+                leading: const Icon(Icons.settings),
+                title: const Text('Edit User Settings'),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ProfileScreen(user: userModel.user),
+                    ),
+                  );
+                },
+              );
+            },
+          ),
+          // .
           Consumer<UserModel>(
             builder: (context, userModel, child) {
               return UserAccountsDrawerHeader(
@@ -30,7 +47,8 @@ class AppDrawer extends StatelessWidget {
                     end: Alignment.bottomRight,
                   ), // Set the color here
                 ),
-                accountEmail: Text(userModel.user?.email ?? 'guest@example.com'),
+                accountEmail:
+                    Text(userModel.user?.email ?? 'guest@example.com'),
                 currentAccountPicture: const CircleAvatar(
                   child: Icon(Icons.person),
                   backgroundColor: Colors.white,
@@ -47,8 +65,8 @@ class AppDrawer extends StatelessWidget {
                 title: const Text('English'),
                 onTap: () {
                   Locale newLocale = const Locale('en', 'US');
-                  Provider.of<LanguageProvider>(context, listen: false).changeLocale(newLocale);
-
+                  Provider.of<LanguageProvider>(context, listen: false)
+                      .changeLocale(newLocale);
                 },
               ),
               ListTile(
@@ -56,7 +74,8 @@ class AppDrawer extends StatelessWidget {
                 title: const Text('Serbian'),
                 onTap: () {
                   Locale newLocale = const Locale('sr', 'RS');
-                  Provider.of<LanguageProvider>(context, listen: false).changeLocale(newLocale);
+                  Provider.of<LanguageProvider>(context, listen: false)
+                      .changeLocale(newLocale);
                   // Update the locale of your app to Spanish here
                 },
               ),
@@ -76,20 +95,20 @@ class AppDrawer extends StatelessWidget {
                   // Update the locale of your app to Spanish here
                 },
               ),
-              
+
               // Add more languages here
             ],
           ),
-            ListTile(
+          ListTile(
             leading: const Icon(Icons.history),
             title: const Text('History of Catches'),
             onTap: () {
               Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => HistoryCatchesScreen()),
+                context,
+                MaterialPageRoute(builder: (context) => HistoryCatchesScreen()),
               );
             },
-            ),
+          ),
         ],
       ),
     );

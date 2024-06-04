@@ -16,22 +16,6 @@ class AppDrawer extends StatelessWidget {
       child: ListView(
         padding: EdgeInsets.zero,
         children: <Widget>[
-          Consumer<UserModel>(
-            builder: (context, userModel, child) {
-              return ListTile(
-                leading: const Icon(Icons.settings),
-                title: const Text('Edit User Settings'),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ProfileScreen(user: userModel.user),
-                    ),
-                  );
-                },
-              );
-            },
-          ),
           // .
           Consumer<UserModel>(
             builder: (context, userModel, child) {
@@ -106,6 +90,22 @@ class AppDrawer extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => HistoryCatchesScreen()),
+              );
+            },
+          ),
+          Consumer<UserModel>(
+            builder: (context, userModel, child) {
+              return ListTile(
+                leading: const Icon(Icons.settings),
+                title: const Text('Edit User Settings'),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ProfileScreen(user: userModel.user),
+                    ),
+                  );
+                },
               );
             },
           ),

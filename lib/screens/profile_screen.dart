@@ -1,3 +1,4 @@
+import 'package:fishingapp/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:fishingapp/models/user_model.dart';
 import 'package:provider/provider.dart';
@@ -19,13 +20,34 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String? _selectedLocation;
   String? _selectedLanguage;
   bool _isEditing = false;
-
+  final Map<String, String> _languageMap = {
+    'en': 'English',
+    'sr': 'Serbian',
+    'sl': 'Slovenian',
+    'hr': 'Croatian',
+  };
+  Future _updateUser() async {
+    final userModel = Provider.of<UserModel>(context, listen: false);
+    final user = userModel.user;
+    if (user != null) {
+      await UserService().updateUser(
+        user,
+        _usernameController.text,
+        _emailController.text,
+        _languageMap.entries.firstWhere((entry) => entry.value == _selectedLanguage).key,
+      );
+    }
+  }
   @override
   void initState() {
     super.initState();
     _usernameController = TextEditingController(text: widget.user?.username);
     _emailController = TextEditingController(text: widget.user?.email);
     _passwordController = TextEditingController(text: '********');
+    if (widget.user?.language_id != null) {
+      _selectedLanguage = _languageMap[widget.user!.language_id];
+    }
+    print('Language: ${widget.user!.language_id}');
   }
 
   @override
@@ -45,6 +67,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
           const SizedBox(height: 16.0),
           ElevatedButton(
             onPressed: () {
+              if (_isEditing) {
+                _updateUser();
+              }
               setState(() {
                 _isEditing = !_isEditing;
               });

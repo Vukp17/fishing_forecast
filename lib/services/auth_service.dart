@@ -89,7 +89,6 @@ class AuthService {
   }
 
   final GoogleSignIn _googleSignIn = GoogleSignIn( 
-    // clientId: '226519630510-qqjkt4klsv4rputmk2u0fju7363jpb3e.apps.googleusercontent.com',
     
     scopes: [
       'email',
@@ -130,7 +129,7 @@ class AuthService {
         final SharedPreferences prefs = await SharedPreferences.getInstance();
         await prefs.setString('access_token', accessToken);
         await prefs.setInt('user_id', responseData['user_id']);
-
+        saveToken(accessToken);
         return getUserData();
       } else {
         throw Exception('Failed to login with Google ${response.statusCode}, response: ${response.body}');
@@ -139,5 +138,15 @@ class AuthService {
       print('Error: $e');
       return null;
     }
+  }
+
+    Future<void> saveToken(String token) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('token', token);
+  }
+
+  Future<String?> loadToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('token');
   }
 }

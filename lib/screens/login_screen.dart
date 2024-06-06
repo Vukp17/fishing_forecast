@@ -33,6 +33,8 @@ class _LoginScreenState extends State<LoginScreen> {
       final userData = await AuthService().login(_username, _password);
 
       if (userData != null) {
+        final authService = AuthService();
+        await authService.saveToken(authService.getAccessToken() as String);
         final userModel = Provider.of<UserModel>(context, listen: false);
         userModel.setUser(userData);
         Navigator.of(context).pushReplacement(

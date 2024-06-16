@@ -1,3 +1,4 @@
+import 'package:fishingapp/models/weather_model.dart';
 import 'package:fishingapp/services/api_contant.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -58,6 +59,37 @@ class WeatherService {
       }
     } catch (error) {
       return []; // Default value
+    }
+  }
+
+  final String apiUrl = 'https://api.open-meteo.com/v1/forecast';
+
+  Future<List<WeatherData>> fetchWeatherData(String latitude, String longitude, DateTime date) async {
+    final response = await http.get(Uri.parse('$apiUrl?latitude=$latitude&longitude=$longitude&hourly=temperature_2m,wind_speed_10m'));
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> data = json.decode(response.body);
+      final List<dynamic> hourlyTemperature = data['hourly']['temperature_2m'];
+      final List<dynamic> hourlyWindSpeed = data['hourly']['wind_speed_10m'];
+      final List<dynamic> hourlyTime = data['hourly']['time'];
+
+      List<WeatherData> weatherDataList = [];
+      for (var i = 0; i < hourlyTime.length; i++) {
+        DateTime weatherDate = DateTime.parse(hourlyTime[i]);
+        if (weatherDate.year == date.year && weatherDate.month == date.month && weatherDate.day == date.day) {
+          weatherDataList.add(WeatherData.fromJson({
+            'date': hourlyTime[i],
+            'temperature': hourlyTemperature[i],
+            'wind_speed': hourlyWindSpeed[i],
+            'moon_phase': 'unknown', // Replace this with actual data if available
+            'fish_forecast': 0.0 // Replace this with actual calculation if available
+          }));
+        }
+      }
+
+      return weatherDataList;
+    } else {
+      throw Exception('Failed to load weather data');
     }
   }
 }

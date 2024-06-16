@@ -1,6 +1,7 @@
 import 'package:fishingapp/models/user_model.dart';
 import 'package:fishingapp/providers/language_provider.dart';
 import 'package:fishingapp/screens/register_screen.dart';
+import 'package:fishingapp/services/weather_service.dart';
 import 'package:fishingapp/widgets/main/bottom_navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -24,6 +25,8 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (context) => UserModel()),
         ChangeNotifierProvider(create: (context) => LanguageProvider()),
+        Provider(create: (_) => WeatherService()),
+
       ],
       child: MyApp(isLoggedIn: token != null),
     ),
@@ -42,13 +45,13 @@ class MyApp extends StatelessWidget {
       future: _initializeUserData(context),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return MaterialApp(
+          return const MaterialApp(
             home: Scaffold(
               body: Center(child: CircularProgressIndicator()),
             ),
           );
         } else if (snapshot.hasError) {
-          return MaterialApp(
+          return const MaterialApp(
             home: Scaffold(
               body: Center(child: Text('Error loading user data')),
             ),

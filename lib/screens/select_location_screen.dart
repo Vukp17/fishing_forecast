@@ -7,7 +7,7 @@ class SelectLocationScreen extends StatefulWidget {
 }
 
 class _SelectLocationScreenState extends State<SelectLocationScreen> {
-  LatLng _pickedLocation = LatLng(37.4219999, -122.0840575);
+  LatLng _pickedLocation = const LatLng(37.4219999, -122.0840575);
 
   void _selectLocation(LatLng position) {
     setState(() {
@@ -19,7 +19,7 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Select Location'),
+        title: const Text('Select Location'),
       ),
       body: GoogleMap(
         initialCameraPosition: CameraPosition(
@@ -27,10 +27,10 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> {
           zoom: 14.4746,
         ),
         onTap: _selectLocation,
-        markers: _pickedLocation != null ? {Marker(markerId: MarkerId('m1'), position: _pickedLocation)} : {},
+        markers: _pickedLocation != null ? {Marker(markerId: const MarkerId('m1'), position: _pickedLocation)} : {},
       ),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.check),
+        child: const Icon(Icons.check),
         onPressed: () {
           Navigator.of(context).pop(_pickedLocation);
         },

@@ -179,21 +179,21 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.rectangle,
-                      borderRadius: BorderRadius.circular(10.0), // Add this
-                      border: Border.all(
-                        color: Color(0xFF42d9c8),
-                      ),
-                    ),
-                    child: IconButton(
-                      icon: Image.asset('assets/apple_logo.png', height: 18.0),
-                      onPressed: () {
-                        // Handle Google sign in
-                      },
-                    ),
-                  ),
+                  // Container(
+                  //   decoration: BoxDecoration(
+                  //     shape: BoxShape.rectangle,
+                  //     borderRadius: BorderRadius.circular(10.0), // Add this
+                  //     border: Border.all(
+                  //       color: Color(0xFF42d9c8),
+                  //     ),
+                  //   ),
+                  //   child: IconButton(
+                  //     icon: Image.asset('assets/apple_logo.png', height: 18.0),
+                  //     onPressed: () {
+                  //       // Handle Google sign in
+                  //     },
+                  //   ),
+                  // ),
                   Container(
                     decoration: BoxDecoration(
                       shape: BoxShape.rectangle,
@@ -209,22 +209,22 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       },
                     ),
                   ),
-                  Container(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.rectangle,
-                      borderRadius: BorderRadius.circular(10.0), // Add this
-                      border: Border.all(
-                        color: Color(0xFF42d9c8),
-                      ),
-                    ),
-                    child: IconButton(
-                      icon:
-                          Image.asset('assets/facebook_logo.png', height: 18.0),
-                      onPressed: () {
-                        // Handle Facebook sign in
-                      },
-                    ),
-                  ),
+                  // Container(
+                  //   decoration: BoxDecoration(
+                  //     shape: BoxShape.rectangle,
+                  //     borderRadius: BorderRadius.circular(10.0), // Add this
+                  //     border: Border.all(
+                  //       color: Color(0xFF42d9c8),
+                  //     ),
+                  //   ),
+                  //   child: IconButton(
+                  //     icon:
+                  //         Image.asset('assets/facebook_logo.png', height: 18.0),
+                  //     onPressed: () {
+                  //       // Handle Facebook sign in
+                  //     },
+                  //   ),
+                  // ),
                 ],
               ),
             ],

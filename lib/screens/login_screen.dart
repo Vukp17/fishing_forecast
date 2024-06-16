@@ -88,15 +88,11 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                const Text(
-                  'FIshing Forecast', // Add logo text
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontFamily: 'Pacifico',
-                    fontWeight: FontWeight.bold,
-                  ),
+                Image.asset(
+                  'assets/icon/fishcast.png', // Add logo image
+                  height: 250, // You can adjust the size as needed
+                  width: 250,
                 ),
-                const SizedBox(height: 20.0),
                 const Text(
                   'Login to your account',
                   style: TextStyle(fontSize: 18),
@@ -182,22 +178,22 @@ class _LoginScreenState extends State<LoginScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.rectangle,
-                        borderRadius: BorderRadius.circular(10.0), // Add this
-                        border: Border.all(
-                          color: const Color(0xFF42d9c8),
-                        ),
-                      ),
-                      child: IconButton(
-                        icon:
-                            Image.asset('assets/apple_logo.png', height: 18.0),
-                        onPressed: () {
-                          // Handle Google sign in
-                        },
-                      ),
-                    ),
+                    // Container(
+                    //   decoration: BoxDecoration(
+                    //     shape: BoxShape.rectangle,
+                    //     borderRadius: BorderRadius.circular(10.0), // Add this
+                    //     border: Border.all(
+                    //       color: const Color(0xFF42d9c8),
+                    //     ),
+                    //   ),
+                    //   child: IconButton(
+                    //     icon:
+                    //         Image.asset('assets/apple_logo.png', height: 18.0),
+                    //     onPressed: () {
+                    //       // Handle Google sign in
+                    //     },
+                    //   ),
+                    // ),
                     Container(
                       decoration: BoxDecoration(
                         shape: BoxShape.rectangle,
@@ -216,22 +212,22 @@ class _LoginScreenState extends State<LoginScreen> {
                             : googleSignIn, // Add this line
                       ),
                     ),
-                    Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.rectangle,
-                        borderRadius: BorderRadius.circular(10.0), // Add this
-                        border: Border.all(
-                          color: const Color(0xFF42d9c8),
-                        ),
-                      ),
-                      child: IconButton(
-                        icon: Image.asset('assets/facebook_logo.png',
-                            height: 18.0),
-                        onPressed: () {
-                          // Handle Facebook sign in
-                        },
-                      ),
-                    ),
+                    // Container(
+                    //   decoration: BoxDecoration(
+                    //     shape: BoxShape.rectangle,
+                    //     borderRadius: BorderRadius.circular(10.0), // Add this
+                    //     border: Border.all(
+                    //       color: const Color(0xFF42d9c8),
+                    //     ),
+                    //   ),
+                    //   child: IconButton(
+                    //     icon: Image.asset('assets/facebook_logo.png',
+                    //         height: 18.0),
+                    //     onPressed: () {
+                    //       // Handle Facebook sign in
+                    //     },
+                    //   ),
+                    // ),
                   ],
                 ),
                 const SizedBox(height: 10.0),

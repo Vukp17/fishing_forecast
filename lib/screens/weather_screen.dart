@@ -86,10 +86,12 @@ class _WeatherScreenState extends State<WeatherScreen> {
                 } else {
                   return Card(
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15.0), // Set the border radius as you need
+                      borderRadius: BorderRadius.circular(15.0),
                     ),
+                    margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     child: Container(
-                      height: 100, // Set the height as you need
+                      height: 50, // Adjusted height for the chart
+                      padding: const EdgeInsets.all(8.0),
                       child: WeatherChart(
                         data: snapshot.data!,
                         parameter: selectedParameter,

@@ -4,6 +4,7 @@ import 'package:fishingapp/screens/feed_screen.dart';
 import 'package:fishingapp/screens/home_screen.dart';
 import 'package:fishingapp/screens/log_catch.dart';
 import 'package:fishingapp/screens/map_screen.dart';
+import 'package:fishingapp/screens/weather_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -20,6 +21,7 @@ class _BottomNavigationExampleState extends State<BottomNavigationExample> {
     HomeScreen(),
     MapScreen(),
     FeedScreen(),
+    WeatherScreen()
   ];
 
   @override
@@ -74,6 +76,10 @@ class _BottomNavigationExampleState extends State<BottomNavigationExample> {
                   icon: Icon(Icons.feed),
                   label: 'Feed',
                 ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.sunny),
+                  label: 'Weather',
+                )
               ],
               backgroundColor: Colors.white,
               elevation: 0, // Remove the elevation from the BottomNavigationBar itself

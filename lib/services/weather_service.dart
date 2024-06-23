@@ -64,32 +64,70 @@ class WeatherService {
 
   final String apiUrl = 'https://api.open-meteo.com/v1/forecast';
 
-  Future<List<WeatherData>> fetchWeatherData(String latitude, String longitude, DateTime date) async {
-    final response = await http.get(Uri.parse('$apiUrl?latitude=$latitude&longitude=$longitude&hourly=temperature_2m,wind_speed_10m'));
+Future<List<WeatherData>> fetchWeatherData(String latitude, String longitude, DateTime date) async {
+  final response = await http.get(Uri.parse('$apiUrl?latitude=$latitude&longitude=$longitude&hourly=temperature_2m,wind_speed_10m&daily=sunrise,sunset'));
 
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> data = json.decode(response.body);
-      final List<dynamic> hourlyTemperature = data['hourly']['temperature_2m'];
-      final List<dynamic> hourlyWindSpeed = data['hourly']['wind_speed_10m'];
-      final List<dynamic> hourlyTime = data['hourly']['time'];
+  if (response.statusCode == 200) {
+    final Map<String, dynamic> data = json.decode(response.body);
+    final List<dynamic> hourlyTemperature = data['hourly']['temperature_2m'];
+    final List<dynamic> hourlyWindSpeed = data['hourly']['wind_speed_10m'];
+    final List<dynamic> hourlyTime = data['hourly']['time'];
+    final List<dynamic> dailySunrise = data['daily']['sunrise'];
+    final List<dynamic> dailySunset = data['daily']['sunset'];
 
-      List<WeatherData> weatherDataList = [];
-      for (var i = 0; i < hourlyTime.length; i++) {
-        DateTime weatherDate = DateTime.parse(hourlyTime[i]);
-        if (weatherDate.year == date.year && weatherDate.month == date.month && weatherDate.day == date.day) {
-          weatherDataList.add(WeatherData.fromJson({
-            'date': hourlyTime[i],
-            'temperature': hourlyTemperature[i],
-            'wind_speed': hourlyWindSpeed[i],
-            'moon_phase': 'unknown', // Replace this with actual data if available
-            'fish_forecast': 0.0 // Replace this with actual calculation if available
-          }));
-        }
+    List<WeatherData> weatherDataList = [];
+    for (var i = 0; i < hourlyTime.length; i++) {
+      DateTime weatherDate = DateTime.parse(hourlyTime[i]);
+      if (weatherDate.year == date.year && weatherDate.month == date.month && weatherDate.day == date.day) {
+        String sunrise = dailySunrise.firstWhere((element) => DateTime.parse(element).day == date.day, orElse: () => '');
+        String sunset = dailySunset.firstWhere((element) => DateTime.parse(element).day == date.day, orElse: () => '');
+
+        weatherDataList.add(WeatherData.fromJson({
+          'date': hourlyTime[i],
+          'temperature': hourlyTemperature[i],
+          'wind_speed': hourlyWindSpeed[i],
+          'sunrise': sunrise,
+          'sunset': sunset,
+          'moon_phase': calculateMoonPhase(date), // Replace this with actual data if available
+          'fish_forecast': 0.0 // Replace this with actual calculation if available
+        }));
       }
-
-      return weatherDataList;
-    } else {
-      throw Exception('Failed to load weather data');
     }
+
+    return weatherDataList;
+  } else {
+    throw Exception('Failed to load weather data');
   }
+}
+
+  String calculateMoonPhase(DateTime date) {
+  // Reference new moon date: January 6, 2000
+  DateTime newMoonReference = DateTime(2000, 1, 6);
+  int daysSinceReference = date.difference(newMoonReference).inDays;
+
+  // Synodic month length in days
+  double synodicMonth = 29.53058867;
+
+  // Calculate the phase as a fraction of the synodic month
+  double phase = (daysSinceReference % synodicMonth) / synodicMonth;
+
+  // Determine the moon phase
+  if (phase < 0.03 || phase > 0.97) {
+    return 'New Moon';
+  } else if (phase < 0.25) {
+    return 'Waxing Crescent';
+  } else if (phase < 0.27) {
+    return 'First Quarter';
+  } else if (phase < 0.50) {
+    return 'Waxing Gibbous';
+  } else if (phase < 0.53) {
+    return 'Full Moon';
+  } else if (phase < 0.75) {
+    return 'Waning Gibbous';
+  } else if (phase < 0.77) {
+    return 'Last Quarter';
+  } else {
+    return 'Waning Crescent';
+  }
+}
 }

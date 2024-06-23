@@ -40,6 +40,7 @@ class WeatherChart extends StatelessWidget {
                   showTitles: true,
                   getTitlesWidget: bottomTitlesWidgets,
                   reservedSize: 30,
+        
                 ),
               ),
               leftTitles: AxisTitles(
@@ -48,7 +49,6 @@ class WeatherChart extends StatelessWidget {
                   interval: 10,
                   getTitlesWidget: leftTitlesWidgets,
                   reservedSize: 30,
-                  
                 ),
               ),
               topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
@@ -67,12 +67,33 @@ class WeatherChart extends StatelessWidget {
             borderData: FlBorderData(
               show: true,
               border: Border.all(color: Colors.grey[300]!, width: 1),
-              
             ),
             minX: spots.first.x,
             maxX: spots.last.x,
             minY: 0,
             maxY: 30,
+            extraLinesData: ExtraLinesData(
+              verticalLines: [
+                VerticalLine(
+                  x: getSunriseXValue(data),
+                  color: Colors.orange,
+                  strokeWidth: 1,
+                  label: VerticalLineLabel(
+                    show: true,
+                    labelResolver: (line) => 'Sunrise',
+                  ),
+                ),
+                VerticalLine(
+                  x: getSunsetXValue(data),
+                  color: Colors.red,
+                  strokeWidth: 1,
+                  label: VerticalLineLabel(
+                    show: true,
+                    labelResolver: (line) => 'Sunset',
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -100,6 +121,16 @@ class WeatherChart extends StatelessWidget {
         spots = [];
     }
     return spots;
+  }
+
+  double getSunriseXValue(List<WeatherData> data) {
+    WeatherData firstData = data.firstWhere((weather) => weather.sunrise.isNotEmpty, orElse: () => data.first);
+    return DateTime.parse(firstData.sunrise).millisecondsSinceEpoch.toDouble();
+  }
+
+  double getSunsetXValue(List<WeatherData> data) {
+    WeatherData firstData = data.firstWhere((weather) => weather.sunset.isNotEmpty, orElse: () => data.first);
+    return DateTime.parse(firstData.sunset).millisecondsSinceEpoch.toDouble();
   }
 }
 

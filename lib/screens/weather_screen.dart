@@ -6,6 +6,7 @@ import '../services/weather_service.dart';
 import '../models/weather_model.dart';
 import 'package:intl/intl.dart';
 
+
 class WeatherScreen extends StatefulWidget {
   @override
   _WeatherScreenState createState() => _WeatherScreenState();
@@ -15,6 +16,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
   late Future<List<WeatherData>> weatherData;
   String selectedParameter = 'Temperature';
   DateTime selectedDate = DateTime.now();
+  bool showGraph = false;
 
   @override
   void initState() {
@@ -97,27 +99,6 @@ class _WeatherScreenState extends State<WeatherScreen> {
                 ),
               ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              IconButton(
-                icon: const Icon(Icons.waves),
-                onPressed: () => setState(() => selectedParameter = 'Temperature'),
-              ),
-              IconButton(
-                icon: const Icon(Icons.air),
-                onPressed: () => setState(() => selectedParameter = 'Wind Speed'),
-              ),
-              IconButton(
-                icon: const Icon(Icons.nights_stay),
-                onPressed: () => setState(() => selectedParameter = 'Moon Phase'),
-              ),
-              IconButton(
-                icon: const Icon(Icons.help),
-                onPressed: () => setState(() => selectedParameter = 'Fish Forecast'),
-              ),
-            ],
-          ),
           Expanded(
             child: FutureBuilder<List<WeatherData>>(
               future: weatherData,
@@ -131,32 +112,35 @@ class _WeatherScreenState extends State<WeatherScreen> {
                   final weather = snapshot.data!.first;
                   return Column(
                     children: [
-                      Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15.0),
-                        ),
-                        margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                        child: Container(
-                          padding: const EdgeInsets.all(8.0),
-                          child: SunriseSunsetWidget(
-                            sunrise: weather.sunrise,
-                            sunset: weather.sunset,
-                          ),
+                      Expanded(
+                        child: ListView(
+                          children: [
+                            _buildParameterCard('Temperature', weather.temperature, Icons.thermostat),
+                            _buildParameterCard('Wind Speed', weather.windSpeed, Icons.air),
+                            _buildParameterCard('Sunrise/Sunet', DateFormat.Hm().format(DateTime.parse(weather.sunrise)), Icons.wb_sunny),
+                            // _buildParameterCard('Sunset', DateFormat.Hm().format(DateTime.parse(weather.sunset)), Icons.nights_stay),
+                          ],
                         ),
                       ),
-                      Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15.0),
-                        ),
-                        margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                        child: Container(
-                          height: 300, // Adjusted height for the chart
-                          padding: const EdgeInsets.all(8.0),
-                          child: WeatherChart(
-                            data: snapshot.data!,
-                            parameter: selectedParameter,
-                          ),
-                        ),
+                      AnimatedSize(
+                        duration: Duration(milliseconds: 300),
+                        child: showGraph
+                            ? Card(
+                                key: ValueKey<String>(selectedParameter),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15.0),
+                                ),
+                                margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                child: Container(
+                                  height: 300, // Adjusted height for the chart
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: WeatherChart(
+                                    data: snapshot.data!,
+                                    parameter: selectedParameter,
+                                  ),
+                                ),
+                              )
+                            : Container(), // Empty container when no graph is shown
                       ),
                     ],
                   );
@@ -165,6 +149,48 @@ class _WeatherScreenState extends State<WeatherScreen> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildParameterCard(String parameter, dynamic value, IconData icon) {
+    bool isSelected = parameter == selectedParameter;
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          selectedParameter = parameter;
+          showGraph = true;
+        });
+      },
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15.0),
+          side: isSelected ? BorderSide(color: Colors.blue, width: 2) : BorderSide.none,
+        ),
+        color: Colors.white,
+        margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        child: Container(
+          padding: EdgeInsets.all(16.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween, // Aligns the text to left and right
+            children: [
+              Row(
+                children: [
+                  Icon(icon, size: 24.0),
+                  SizedBox(width: 8.0),
+                  Text(
+                    value.toString(),
+                    style: TextStyle(fontSize: 16.0),
+                  ),
+                ],
+              ),
+              Text(
+                parameter,
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

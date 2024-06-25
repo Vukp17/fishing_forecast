@@ -125,12 +125,12 @@ class WeatherChart extends StatelessWidget {
 
   double getSunriseXValue(List<WeatherData> data) {
     WeatherData firstData = data.firstWhere((weather) => weather.sunrise.isNotEmpty, orElse: () => data.first);
-    return DateTime.parse(firstData.sunrise).millisecondsSinceEpoch.toDouble();
+    return firstData.sunrise.isNotEmpty ? DateTime.parse(firstData.sunrise as String).millisecondsSinceEpoch.toDouble() : 0;
   }
-
+  
   double getSunsetXValue(List<WeatherData> data) {
     WeatherData firstData = data.firstWhere((weather) => weather.sunset.isNotEmpty, orElse: () => data.first);
-    return DateTime.parse(firstData.sunset).millisecondsSinceEpoch.toDouble();
+    return firstData.sunset.isNotEmpty ? DateTime.parse(firstData.sunset as String).millisecondsSinceEpoch.toDouble() : 0;
   }
 }
 

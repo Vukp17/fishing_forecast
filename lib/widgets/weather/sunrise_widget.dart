@@ -18,24 +18,24 @@ class SunriseSunsetWidget extends StatelessWidget {
     return Column(
       children: [
         CustomPaint(
-          size: Size(300, 150),
+          size: const Size(300, 150),
           painter: SunriseSunsetPainter(sunriseTime, sunsetTime),
         ),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Row(
               children: [
-                Icon(Icons.wb_sunny, color: Colors.orange),
-                SizedBox(width: 8),
+                const Icon(Icons.wb_sunny, color: Colors.orange),
+                const SizedBox(width: 8),
                 Text('Sunrise: ${DateFormat('hh:mm a').format(sunriseTime)}'),
               ],
             ),
             Row(
               children: [
-                Icon(Icons.wb_sunny_outlined, color: Colors.orange),
-                SizedBox(width: 8),
+                const Icon(Icons.wb_sunny_outlined, color: Colors.orange),
+                const SizedBox(width: 8),
                 Text('Sunset: ${DateFormat('hh:mm a').format(sunsetTime)}'),
               ],
             ),
@@ -90,7 +90,7 @@ class SunriseSunsetPainter extends CustomPainter {
     final y = center.dy + radius * sin(angle);
 
     final textPainter = TextPainter(
-      text: TextSpan(
+      text: const TextSpan(
        // text: DateFormat('hh:mm a').format(type == 'sunrise' ? sunrise : sunset),
         style: TextStyle(color: Colors.orange, fontSize: 12),
       ),

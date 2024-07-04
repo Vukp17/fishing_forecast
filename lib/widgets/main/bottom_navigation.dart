@@ -47,46 +47,48 @@ class _BottomNavigationExampleState extends State<BottomNavigationExample> {
         },
         backgroundColor: const Color(0xFF40d3c3),
         child: const Icon(Icons.add),
-        
       ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 10),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(30),
-          child: Material(
-            elevation: 5.0, // This adds a shadow
-            child: BottomNavigationBar(
-              currentIndex: _currentIndex,
-              onTap: (index) {
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      bottomNavigationBar: BottomAppBar(
+        shape: const CircularNotchedRectangle(),
+        notchMargin: 6.0,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: <Widget>[
+            IconButton(
+              icon: const Icon(Icons.home),
+              onPressed: () {
                 setState(() {
-                  _currentIndex = index;
+                  _currentIndex = 0;
                 });
               },
-              items: const [
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.home),
-                  label: 'Home',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.map),
-                  label: 'Map',
-                  backgroundColor: Colors.white
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.feed),
-                  label: 'Feed',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.sunny),
-                  label: 'Weather',
-                )
-              ],
-              backgroundColor: Colors.white,
-              elevation: 0, // Remove the elevation from the BottomNavigationBar itself
-              selectedItemColor:  const Color(0xFF40d3c3),
-              unselectedItemColor: Colors.grey,
             ),
-          ),
+            IconButton(
+              icon: const Icon(Icons.map),
+              onPressed: () {
+                setState(() {
+                  _currentIndex = 1;
+                });
+              },
+            ),
+            const SizedBox(width: 48), // The empty space in the middle
+            IconButton(
+              icon: const Icon(Icons.feed),
+              onPressed: () {
+                setState(() {
+                  _currentIndex = 2;
+                });
+              },
+            ),
+            IconButton(
+              icon: const Icon(Icons.sunny),
+              onPressed: () {
+                setState(() {
+                  _currentIndex = 3;
+                });
+              },
+            ),
+          ],
         ),
       ),
     );

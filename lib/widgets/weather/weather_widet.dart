@@ -2,101 +2,166 @@ import 'package:fishingapp/models/weather_model.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 
-class WeatherChart extends StatelessWidget {
+class WeatherChart extends StatefulWidget {
   final List<WeatherData> data;
   final String parameter;
 
   WeatherChart({required this.data, required this.parameter});
 
   @override
+  _WeatherChartState createState() => _WeatherChartState();
+}
+
+class _WeatherChartState extends State<WeatherChart> {
+  late ScrollController _scrollController;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _scrollLeft() {
+    _scrollController.animateTo(
+      _scrollController.offset - 100,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
+  }
+
+  void _scrollRight() {
+    _scrollController.animateTo(
+      _scrollController.offset + 100,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
     // Process data
-    List<FlSpot> spots = processData(data, parameter);
+    List<FlSpot> spots = processData(widget.data, widget.parameter);
 
     // Calculate chart width dynamically
     double chartWidth = MediaQuery.of(context).size.width * (spots.length / 10);
 
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Container(
-        width: chartWidth,
-        height: 300, // Set a fixed height for the chart
-        child: LineChart(
-          LineChartData(
-            lineBarsData: [
-              LineChartBarData(
-                spots: spots,
-                isCurved: true,
-                color: Colors.blue,
-                barWidth: 2,
-                dotData: const FlDotData(show: false),
-                belowBarData: BarAreaData(show: true, color: Colors.blue.withOpacity(0.3)),
-              ),
-            ],
-            titlesData: const FlTitlesData(
-              show: true,
-              bottomTitles: AxisTitles(
-                sideTitles: SideTitles(
-                  showTitles: true,
-                  getTitlesWidget: bottomTitlesWidgets,
-                  reservedSize: 30,
-        
-                ),
-              ),
-              leftTitles: AxisTitles(
-                sideTitles: SideTitles(
-                  showTitles: true,
-                  interval: 10,
-                  getTitlesWidget: leftTitlesWidgets,
-                  reservedSize: 30,
-                ),
-              ),
-              topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-              rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-            ),
-            gridData: FlGridData(
-              show: true,
-              drawHorizontalLine: true,
-              getDrawingHorizontalLine: (value) {
-                return FlLine(
-                  color: Colors.grey[300]!,
-                  strokeWidth: 1,
-                );
-              },
-            ),
-            borderData: FlBorderData(
-              show: true,
-              border: Border.all(color: Colors.grey[300]!, width: 1),
-            ),
-            minX: spots.first.x,
-            maxX: spots.last.x,
-            minY: 0,
-            maxY: 30,
-            extraLinesData: ExtraLinesData(
-              verticalLines: [
-                VerticalLine(
-                  x: getSunriseXValue(data),
-                  color: Colors.orange,
-                  strokeWidth: 1,
-                  label: VerticalLineLabel(
-                    show: true,
-                    labelResolver: (line) => 'Sunrise',
+    return Stack(
+      children: [
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          controller: _scrollController,
+          child: SizedBox(
+            width: chartWidth,
+            height: 300, // Set a fixed height for the chart
+            child: LineChart(
+              LineChartData(
+                lineBarsData: [
+                  LineChartBarData(
+                    spots: spots,
+                    isCurved: true,
+                    color: Colors.blue,
+                    barWidth: 2,
+                    dotData: const FlDotData(show: false),
+                    belowBarData: BarAreaData(show: true, color: Colors.blue.withOpacity(0.3)),
                   ),
-                ),
-                VerticalLine(
-                  x: getSunsetXValue(data),
-                  color: Colors.red,
-                  strokeWidth: 1,
-                  label: VerticalLineLabel(
-                    show: true,
-                    labelResolver: (line) => 'Sunset',
+                ],
+                titlesData: const FlTitlesData(
+                  show: true,
+                  bottomTitles: AxisTitles(
+                    sideTitles: SideTitles(
+                      showTitles: true,
+                      getTitlesWidget: bottomTitlesWidgets,
+                      reservedSize: 30,
+                    ),
                   ),
+                  leftTitles: AxisTitles(
+                    sideTitles: SideTitles(
+                      showTitles: true,
+                      interval: 10,
+                      getTitlesWidget: leftTitlesWidgets,
+                      reservedSize: 30,
+                    ),
+                  ),
+                  topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                  rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
                 ),
-              ],
+                gridData: FlGridData(
+                  show: true,
+                  drawHorizontalLine: true,
+                  getDrawingHorizontalLine: (value) {
+                    return FlLine(
+                      color: Colors.grey[300]!,
+                      strokeWidth: 1,
+                    );
+                  },
+                ),
+                borderData: FlBorderData(
+                  show: true,
+                  border: Border.all(color: Colors.grey[300]!, width: 1),
+                ),
+                minX: spots.first.x,
+                maxX: spots.last.x,
+                minY: 0,
+                maxY: 30,
+                extraLinesData: ExtraLinesData(
+                  verticalLines: [
+                    VerticalLine(
+                      x: getSunriseXValue(widget.data),
+                      color: Colors.orange,
+                      strokeWidth: 1,
+                      label: VerticalLineLabel(
+                        show: true,
+                        labelResolver: (line) => 'Sunrise',
+                      ),
+                    ),
+                    VerticalLine(
+                      x: getSunsetXValue(widget.data),
+                      color: Colors.red,
+                      strokeWidth: 1,
+                      label: VerticalLineLabel(
+                        show: true,
+                        labelResolver: (line) => 'Sunset',
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
         ),
-      ),
+        Positioned(
+          left: 0,
+          top: 0,
+          bottom: 0,
+          child: GestureDetector(
+            onTap: _scrollLeft,
+            child: Container(
+              alignment: Alignment.centerLeft,
+              color: Colors.transparent, // Make sure the container is clickable
+              child: const Icon(Icons.arrow_back, color: Colors.grey),
+            ),
+          ),
+        ),
+        Positioned(
+          right: 0,
+          top: 0,
+          bottom: 0,
+          child: GestureDetector(
+            onTap: _scrollRight,
+            child: Container(
+              alignment: Alignment.centerRight,
+              color: Colors.transparent, // Make sure the container is clickable
+              child: const Icon(Icons.arrow_forward, color: Colors.grey),
+            ),
+          ),
+        ),
+      ],
     );
   }
 

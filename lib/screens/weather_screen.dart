@@ -128,6 +128,8 @@ class _WeatherScreenState extends State<WeatherScreen> {
                                 'Sunrise/Sunset',
                                 '${DateFormat.Hm().format(DateTime.parse(weather.sunrise))} / ${DateFormat.Hm().format(DateTime.parse(weather.sunset))}',
                                 Icons.wb_sunny),
+                            _buildParameterCard('Humidity', 00,
+                                Icons.water_damage),
                           ],
                         ),
                       ),
@@ -136,7 +138,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                         child: selectedParameter == 'Sunrise/Sunset' &&
                                 !showGraph
                             ? Card(
-                                shadowColor: Colors.grey ,
+                                shadowColor: Colors.grey,
                                 elevation: 5,
                                 color: Colors.white,
                                 shape: RoundedRectangleBorder(

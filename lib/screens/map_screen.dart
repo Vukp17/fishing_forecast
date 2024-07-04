@@ -3,6 +3,7 @@ import 'package:fishingapp/services/api_contant.dart';
 import 'package:fishingapp/services/auth_service.dart';
 import 'package:fishingapp/services/map_service.dart';
 import 'package:fishingapp/widgets/dialogs/spot_preview_dialog.dart';
+import 'package:fishingapp/widgets/panels/spot_preview_panel.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
@@ -41,24 +42,28 @@ class _MapScreenState extends State<MapScreen> {
     // Add your logic here to fetch only the user's spots
     return await MapService().getSpots();
   }
-void _showImageDialog(String username, Widget image, String location) {
-  showDialog(
-    context: context,
-    builder: (context) {
-      return SpotPreviewDialog(username: username, image: image, location: location);
-    },
-  );
-}
-void _addMarkers(List<Catch> spots) {
+
+  void _showImageDialog(String username, Widget image, String location) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (context) {
+        return SpotPreviewPanel(
+            username: username, image: image, location: location);
+      },
+    );
+    ;
+  }
+
+  void _addMarkers(List<Catch> spots) {
     setState(() {
       _markers.clear(); // Clear previous markers
       _markers.addAll(spots.map((spot) {
         return Marker(
           markerId: MarkerId(spot.id.toString()),
-          position:
-              LatLng(double.parse(spot.lat), double.parse(spot.lng)),
-          infoWindow: InfoWindow(
-            title: spot.name),
+          position: LatLng(double.parse(spot.lat), double.parse(spot.lng)),
+          infoWindow: InfoWindow(title: spot.name),
           onTap: () => _onMarkerTapped(spot),
         );
       }).toSet());
@@ -67,24 +72,23 @@ void _addMarkers(List<Catch> spots) {
 
   Future<void> _onMarkerTapped(Catch spot) async {
     final accessToken = await AuthService().getAccessToken();
-    if (!spot.imageId.startsWith('http') &&
-        !spot.imageId.startsWith('https')) {
+    if (!spot.imageId.startsWith('http') && !spot.imageId.startsWith('https')) {
       final response = await http.get(
         Uri.parse('$BASE_URL/images/${spot.imageId}'),
         headers: {'Authorization': 'Bearer $accessToken'},
       );
       if (response.statusCode == 200) {
-        _showImageDialog(spot.user!.username, Image.memory(response.bodyBytes),spot.name);
+        _showImageDialog(
+            spot.user!.username, Image.memory(response.bodyBytes), spot.name);
       } else {
         print(
             'Failed to load image: ${response.statusCode} , ${response.body}');
       }
     } else {
-      _showImageDialog(spot.user!.username, Image.network(spot.imageId), spot.name);
+      _showImageDialog(
+          spot.user!.username, Image.network(spot.imageId), spot.name);
     }
   }
-
-
 
   @override
   Widget build(BuildContext context) {

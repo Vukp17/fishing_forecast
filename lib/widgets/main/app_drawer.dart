@@ -1,6 +1,7 @@
 import 'package:fishingapp/models/user_model.dart';
 import 'package:fishingapp/screens/history_catches_screen.dart';
 import 'package:fishingapp/screens/profile_screen.dart';
+import 'package:fishingapp/services/auth_service.dart';
 import 'package:flag/flag.dart';
 import 'package:flag/flag_widget.dart';
 import 'package:flutter/material.dart';
@@ -108,6 +109,15 @@ class AppDrawer extends StatelessWidget {
                 },
               );
             },
+          ),
+          ListTile(
+            leading: const Icon(Icons.exit_to_app),
+            title: const Text('Logout'),
+            onTap: () {
+              Provider.of<UserModel>(context, listen: false).logout();
+                AuthService().logout();
+                Navigator.pushReplacementNamed(context, '/login');
+              },
           ),
         ],
       ),

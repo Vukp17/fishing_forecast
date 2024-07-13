@@ -28,7 +28,20 @@ class AuthService {
 
   Future<void> logout() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.remove('access_token');
+    final response = await http.post(
+      Uri.parse('$BASE_URL/logout'),
+      headers: {'Authorization': 'Bearer ${prefs.getString('access_token')}'},
+    );
+
+    if (response.statusCode == 200) {
+      prefs.remove('access_token');
+      prefs.remove('user_id');
+      prefs.remove('token');
+      logoutGoogle();
+
+    } else {
+      throw Exception('Failed to logout user');
+    }
   }
 
   Future<String?> getAccessToken() async {
@@ -108,15 +121,6 @@ class AuthService {
 
       final GoogleSignInAuthentication googleAuth =await googleUser.authentication;
 
-
-      // if (googleAuth.idToken == null) {
-      //   print(googleAuth.accessToken);
-      //   throw Exception('Failed to retrieve ID token');
-      // }else{
-      //   print('ID Token: $googleAuth.idToken');
-      //   print(googleAuth.idToken);
-      // }
-
       final response = await http.post(
         Uri.parse('$BASE_URL/google-login'),
         body: {'username': googleUser.displayName,'email': googleUser.email},
@@ -142,11 +146,22 @@ class AuthService {
 
     Future<void> saveToken(String token) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('token', token);
+    await prefs.setString('access_token', token);
   }
 
   Future<String?> loadToken() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('token');
+    return prefs.getString('access_token');
   }
+
+  Future<void> deleteToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('access_token');
+  }
+
+  logoutGoogle() async {
+    await _googleSignIn.signOut();
+  }
+  
+
 }

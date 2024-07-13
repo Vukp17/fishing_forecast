@@ -6,6 +6,7 @@ class WeatherData {
   final double fishForecast;
   final String sunrise;
   final String sunset;
+  final double relative_humidity;
 
   WeatherData({
     required this.date,
@@ -15,6 +16,7 @@ class WeatherData {
     required this.fishForecast,
     required this.sunrise,
     required this.sunset,
+    required this.relative_humidity,
   });
 
   factory WeatherData.fromJson(Map<String, dynamic> json) {
@@ -26,6 +28,7 @@ class WeatherData {
       fishForecast: json['fish_forecast'].toDouble(),
       sunrise: json['sunrise'],
       sunset: json['sunset'],
+      relative_humidity: json['relative_humidity'].toDouble(),
     );
   }
 }

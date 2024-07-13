@@ -26,7 +26,6 @@ void main() async {
         ChangeNotifierProvider(create: (context) => UserModel()),
         ChangeNotifierProvider(create: (context) => LanguageProvider()),
         Provider(create: (_) => WeatherService()),
-
       ],
       child: MyApp(isLoggedIn: token != null),
     ),
@@ -89,7 +88,9 @@ class MyApp extends StatelessWidget {
   }
 
   Future<void> _initializeUserData(BuildContext context) async {
-    if (isLoggedIn) {
+    final token = await _authService.loadToken();
+
+    if (isLoggedIn && token != null) {
       final userModel = Provider.of<UserModel>(context, listen: false);
       final userData = await _authService.getUserData();
       // Use a post-frame callback to update the user model after the build is complete

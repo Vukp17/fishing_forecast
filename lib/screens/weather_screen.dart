@@ -44,9 +44,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
   }
 
   List<DateTime> _generateWeekDates(DateTime selectedDate) {
-    final startOfWeek =
-        selectedDate.subtract(Duration(days: selectedDate.weekday - 1));
-    return List.generate(7, (index) => startOfWeek.add(Duration(days: index)));
+    return List.generate(7, (index) => selectedDate.add(Duration(days: index)));
   }
 
   @override
@@ -114,22 +112,24 @@ class _WeatherScreenState extends State<WeatherScreen> {
                   return const Center(
                       child: Text('No weather data available.'));
                 } else {
-                  final weather = snapshot.data!.first;
+                  final weather = snapshot.data!
+                      .where((data) => data.date.day == selectedDate.day)
+                      .toList();
                   return Column(
                     children: [
                       Expanded(
                         child: ListView(
                           children: [
                             _buildParameterCard('Temperature',
-                                weather.temperature, Icons.thermostat),
-                            _buildParameterCard(
-                                'Wind Speed', weather.windSpeed, Icons.air),
+                                weather.first.temperature, Icons.thermostat),
+                            _buildParameterCard('Wind Speed',
+                                weather.first.windSpeed, Icons.air),
                             _buildParameterCard(
                                 'Sunrise/Sunset',
-                                '${DateFormat.Hm().format(DateTime.parse(weather.sunrise))} / ${DateFormat.Hm().format(DateTime.parse(weather.sunset))}',
+                                '${DateFormat.Hm().format(DateTime.parse(weather.first.sunrise))} / ${DateFormat.Hm().format(DateTime.parse(weather.first.sunset))}',
                                 Icons.wb_sunny),
-                            _buildParameterCard('Humidity', 00,
-                                Icons.water_damage),
+                            _buildParameterCard('Humidity',
+                                weather.first.relative_humidity, Icons.water),
                           ],
                         ),
                       ),
@@ -147,8 +147,8 @@ class _WeatherScreenState extends State<WeatherScreen> {
                                 margin: const EdgeInsets.symmetric(
                                     horizontal: 16, vertical: 8),
                                 child: SunriseSunsetWidget(
-                                  sunrise: weather.sunrise,
-                                  sunset: weather.sunset,
+                                  sunrise: weather.first.sunrise,
+                                  sunset: weather.first.sunset,
                                 ))
                             : showGraph
                                 ? Card(
@@ -183,6 +183,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
 
   Widget _buildParameterCard(String parameter, dynamic value, IconData icon) {
     bool isSelected = parameter == selectedParameter;
+
     return GestureDetector(
       onTap: () {
         setState(() {
@@ -202,8 +203,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
         child: Container(
           padding: const EdgeInsets.all(16.0),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment
-                .spaceBetween, // Aligns the text to left and right
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Row(
                 children: [

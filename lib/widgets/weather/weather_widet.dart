@@ -182,6 +182,13 @@ class _WeatherChartState extends State<WeatherChart> {
                 weather.windSpeed))
             .toList();
         break;
+      case 'Humidity':
+        spots = data
+            .map((weather) => FlSpot(
+                weather.date.millisecondsSinceEpoch.toDouble(),
+                weather.relative_humidity))
+            .toList();
+        break;
       default:
         spots = [];
     }

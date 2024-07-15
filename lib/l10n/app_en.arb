@@ -1,13 +1,44 @@
 {
-  "helloWorld": "Hello World!",
-  "@helloWorld": {
+  "@all": {
     "description": "The conventional newborn programmer greeting"
   },
-  "locations":"Locations",
-  "fishingSpots":"Fishing Spots",
-  "favorites":"Favorites",
-   "settings":"Settings",
-   "recent":"Recent",
-   "all":"All"
+  "locations": "Locations",
+  "fishingSpots": "Fishing Spots",
+  "favorites": "Favorites",
+  "settings": "Settings",
+  "recent": "Recent",
+  "all": "All",
+  "historyCatches": "History Catches",
+  "catches": "Catches",
+  "species": "Species",
+  "map": "Map",
+  "forecast": "Forecast",
+  "weather": "Weather",
+  "temperature": "Temperature",
+  "feed": "Feed",
+  "profile": "Profile",
+  "logout": "Logout",
+  "my_spots": "My Spots",
+  "all_spots": "All",
+  "wind_speed": "Wind Speed",
+  "humidity": "Humidity",
+  "pressure": "Pressure",
+  "sunrise": "Sunrise/Sunset",
+  "moonrise": "Moonrise/Moonset",
+  "calendar": "Calendar",
+  "title": "Title",
+  "description": "Description",
+  "save": "Save",
+  "cancel": "Cancel",
+  "delete": "Delete",
+  "location": "Location",
+  "title_validation": "Title can't be empty",
+  "description_validation": "Description can't be empty",
+  "location_validation": "Location can't be empty",
+  "succe_message": "Action was successful",
+  "date_validation": "Date can't be empty",
+  "error_message": "An error occurred",
+  "log_catch": "Log Catch"
+
 
 }

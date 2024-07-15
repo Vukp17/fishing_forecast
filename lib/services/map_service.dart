@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:fishingapp/models/location_model.dart';
 import 'package:fishingapp/models/spot_model.dart';
 import 'package:fishingapp/services/api_contant.dart';
 import 'package:fishingapp/services/auth_service.dart';
@@ -65,6 +66,22 @@ class MapService {
       print("Failed to load spots ${response.statusCode} ${response.body}");
       throw Exception('Failed to load spots');
     }
+  }
+
+  Future <Location> getFavoriteLocation() async {
+    final accessToken = await AuthService().getAccessToken();
+    final response = await http.get(
+      Uri.parse('$BASE_URL/locations/favorite'),
+      headers: {'Authorization': 'Bearer $accessToken'},
+    );
+
+    if (response.statusCode == 200) {
+      final location = json.decode(response.body);
+      return Location.fromMap(location);
+    } else {
+
+      throw Exception('Failed to load favorite location');
+    } 
   }
 
 }

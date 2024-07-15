@@ -2,6 +2,7 @@ import 'package:fishingapp/models/spot_model.dart';
 import 'package:fishingapp/services/spot_service.dart';
 import 'package:fishingapp/widgets/feed/feed_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 
 class FeedScreen extends StatefulWidget {
@@ -56,7 +57,7 @@ class _FeedScreenState extends State<FeedScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Feed'),
+        title: Text( AppLocalizations.of(context)!.feed),
       ),
       body: _isLoading && catches.isEmpty
           ? Center(child: CircularProgressIndicator())

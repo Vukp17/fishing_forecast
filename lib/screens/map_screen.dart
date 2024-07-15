@@ -1,14 +1,22 @@
-import 'package:fishingapp/models/spot_model.dart';
-import 'package:fishingapp/services/api_contant.dart';
-import 'package:fishingapp/services/auth_service.dart';
-import 'package:fishingapp/services/map_service.dart';
-import 'package:fishingapp/widgets/dialogs/spot_preview_dialog.dart';
-import 'package:fishingapp/widgets/panels/spot_preview_panel.dart';
+import 'package:fishingapp/models/location_model.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
+import '../models/spot_model.dart';
+import '../services/api_contant.dart';
+import '../services/auth_service.dart';
+import '../services/map_service.dart';
+import '../widgets/dialogs/spot_preview_dialog.dart';
+import '../widgets/panels/spot_preview_panel.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class MapScreen extends StatefulWidget {
+  final Location? initialLocation;
+
+  const MapScreen({Key? key, this.initialLocation}) : super(key: key);
+
   @override
   _MapScreenState createState() => _MapScreenState();
 }
@@ -17,43 +25,28 @@ class _MapScreenState extends State<MapScreen> {
   final Set<Marker> _markers = {};
   bool _showImage = false;
   bool _showMySpots = true; // New state variable
+  LatLng? favoriteLocation;
 
   @override
   void initState() {
     super.initState();
+    if (widget.initialLocation != null) {
+      favoriteLocation =
+          LatLng(widget.initialLocation!.latitude, widget.initialLocation!.longitude);
+    }else{
+      favoriteLocation = LatLng(46.5547, 15.6459);
+    }
     _getAllSpots();
   }
 
   Future<void> _getAllSpots() async {
-    final spots = await _fetchAllSpots();
+    final spots = await MapService().getAllSpots();
     _addMarkers(spots);
   }
 
   Future<void> _getUserSpots() async {
-    final spots = await _fetchUserSpots();
+    final spots = await MapService().getSpots();
     _addMarkers(spots);
-  }
-
-  Future<List<Catch>> _fetchAllSpots() async {
-    return await MapService().getAllSpots();
-  }
-
-  Future<List<Catch>> _fetchUserSpots() async {
-    // Add your logic here to fetch only the user's spots
-    return await MapService().getSpots();
-  }
-
-  void _showImageDialog(String username, Widget image, String location) {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
-      isScrollControlled: true,
-      builder: (context) {
-        return SpotPreviewPanel(
-            username: username, image: image, location: location);
-      },
-    );
-    ;
   }
 
   void _addMarkers(List<Catch> spots) {
@@ -79,34 +72,57 @@ class _MapScreenState extends State<MapScreen> {
       );
       if (response.statusCode == 200) {
         _showImageDialog(
-            spot.user!.username, Image.memory(response.bodyBytes), spot.name);
+          spot.user!.username,
+          Image.memory(response.bodyBytes),
+          spot.name,
+        );
       } else {
-        print(
-            'Failed to load image: ${response.statusCode} , ${response.body}');
+        print('Failed to load image: ${response.statusCode}, ${response.body}');
       }
     } else {
       _showImageDialog(
-          spot.user!.username, Image.network(spot.imageId), spot.name);
+        spot.user!.username,
+        Image.network(spot.imageId),
+        spot.name,
+      );
     }
+  }
+
+  void _showImageDialog(String username, Widget image, String location) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (context) {
+        return SpotPreviewPanel(
+          username: username,
+          image: image,
+          location: location,
+        );
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Google Maps'),
+        title: Text( AppLocalizations.of(context)!.map)
       ),
       body: Stack(
         children: [
-          GoogleMap(
-            onMapCreated:
-                (controller) {}, // Empty function as loading happens in initState
-            markers: _markers,
-            initialCameraPosition: CameraPosition(
-              target: LatLng(37.42796133580664, -122.085749655962),
-              zoom: 14.4746,
+          if (favoriteLocation != null)
+            GoogleMap(
+              onMapCreated: (controller) {
+                // Move camera to favorite location when map is ready
+                controller.animateCamera(CameraUpdate.newLatLngZoom(favoriteLocation!, 14.0));
+              },
+              markers: _markers,
+              initialCameraPosition: CameraPosition(
+                target: favoriteLocation!,
+                zoom: 14.0,
+              ),
             ),
-          ),
           if (_showImage)
             Positioned(
               top: 10,
@@ -150,14 +166,14 @@ class _MapScreenState extends State<MapScreen> {
                     }
                   });
                 },
-                children: const [
+                children: [
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 16),
-                    child: Text('My Spots'),
+                    child: Text (AppLocalizations.of(context)!.my_spots)
                   ),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 16),
-                    child: Text('All Spots'),
+                    child: Text(AppLocalizations.of(context)!.all_spots)
                   ),
                 ],
               ),

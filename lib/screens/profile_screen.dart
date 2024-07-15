@@ -34,10 +34,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
         user,
         _usernameController.text,
         _emailController.text,
-        _languageMap.entries.firstWhere((entry) => entry.value == _selectedLanguage).key,
+        _languageMap.entries
+            .firstWhere((entry) => entry.value == _selectedLanguage)
+            .key,
       );
     }
   }
+
   @override
   void initState() {
     super.initState();
@@ -62,7 +65,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
           const CircleAvatar(
             radius: 50,
             // Replace with your user's profile image
-            backgroundImage: NetworkImage('https://via.placeholder.com/150'),
+            child: Icon(Icons.person),
+            backgroundColor: Colors.white,
           ),
           const SizedBox(height: 16.0),
           ElevatedButton(
@@ -78,10 +82,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           const SizedBox(height: 16.0),
           _buildTextField('Username', _usernameController, !_isEditing),
-          _buildTextField('Email', _emailController, !_isEditing),
-          _buildTextField('Password', _passwordController, !_isEditing),
-          _buildDropdown('Favorite Location', ['Location 1', 'Location 2'],
-              _selectedLocation),
+          // _buildDropdown('Favorite Location', ['Location 1', 'Location 2'],
+          //     _selectedLocation),
           _buildLanguageDropdown(
             'Languages',
             ['English', 'Serbian', 'Slovenian', 'Croatian'],

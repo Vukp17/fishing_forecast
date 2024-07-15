@@ -122,14 +122,7 @@ class _HistoryCatchesScreenState extends State<HistoryCatchesScreen> {
                                   children: [
                                     Icon(Icons.water, color: Colors.white),
                                     SizedBox(width: 5),
-                                    Text(
-                                      'carp',
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white,
-                                      ),
-                                    ),
+
                                   ],
                                 ),
                               ),

@@ -1,6 +1,7 @@
 import 'package:fishingapp/models/weather_model.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class WeatherChart extends StatefulWidget {
   final List<WeatherData> data;
@@ -168,21 +169,22 @@ class _WeatherChartState extends State<WeatherChart> {
   List<FlSpot> processData(List<WeatherData> data, String parameter) {
     List<FlSpot> spots = [];
     switch (parameter) {
-      case 'Temperature':
+      case 'Temperature' || 'Temperatura':
         spots = data
             .map((weather) => FlSpot(
                 weather.date.millisecondsSinceEpoch.toDouble(),
                 weather.temperature))
             .toList();
         break;
-      case 'Wind Speed':
+
+      case 'Wind Speed' || 'Hitrost vetra' || 'Brzina vjetra' || 'Brzina vetra':
         spots = data
             .map((weather) => FlSpot(
                 weather.date.millisecondsSinceEpoch.toDouble(),
                 weather.windSpeed))
             .toList();
         break;
-      case 'Humidity':
+      case 'Humidity' || 'Vlažnost' || 'Vlažnost zraka' || 'Vlažnost zraka':
         spots = data
             .map((weather) => FlSpot(
                 weather.date.millisecondsSinceEpoch.toDouble(),

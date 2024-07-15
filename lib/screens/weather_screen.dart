@@ -85,6 +85,18 @@ class _WeatherScreenState extends State<WeatherScreen> {
     return List.generate(7, (index) => selectedDate.add(Duration(days: index)));
   }
 
+  bool isTemperatureGood(double temperature) {
+    return temperature >= 10 && temperature <= 30;
+  }
+
+  bool isWindSpeedGood(double windSpeed) {
+    return windSpeed < 15;
+  }
+
+  bool isHumidityGood(double humidity) {
+    return humidity >= 30 && humidity <= 70;
+  }
+
   @override
   Widget build(BuildContext context) {
     List<DateTime> weekDates = _generateWeekDates(selectedDate);
@@ -137,7 +149,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                         onTap: () => _selectDate(context),
                         child: Container(
                           padding: const EdgeInsets.all(8.0),
-                          child:  Column(
+                          child: Column(
                             children: [
                               Icon(Icons.calendar_today, color: Colors.grey),
                               Text(AppLocalizations.of(context)!.calendar,
@@ -159,7 +171,6 @@ class _WeatherScreenState extends State<WeatherScreen> {
                               ? selectedLocation
                               : null,
                           onChanged: (Location? newValue) {
-                            print(newValue);
                             setState(() {
                               selectedLocation = newValue!;
                               fetchWeather();
@@ -189,8 +200,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                         return const Center(child: CircularProgressIndicator());
                       } else if (snapshot.hasError) {
                         print(snapshot.error);
-                        return Center(
-                            child: Text('No weather data available.'));
+                        return Center(child: Text('No weather data available.'));
                       } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                         return const Center(
                             child: Text('No weather data available.'));
@@ -198,79 +208,68 @@ class _WeatherScreenState extends State<WeatherScreen> {
                         final weather = snapshot.data!
                             .where((data) => data.date.day == selectedDate.day)
                             .toList();
-                        return Column(
+                        return ListView(
                           children: [
-                            Expanded(
-                              child: ListView(
-                                children: [
-                                  _buildParameterCard(
-                                      AppLocalizations.of(context)!.temperature,
-                                      weather.first.temperature,
-                                      Icons.thermostat),
-                                  _buildParameterCard(
-                                      AppLocalizations.of(context)!.wind_speed,
-                                      weather.first.windSpeed,
-                                      Icons.air),
-                                  _buildParameterCard(
-                                      AppLocalizations.of(context)!.sunrise,
-                                      '${DateFormat.Hm().format(DateTime.parse(weather.first.sunrise))} / ${DateFormat.Hm().format(DateTime.parse(weather.first.sunset))}',
-                                      Icons.wb_sunny),
-                                  _buildParameterCard(
-                                      AppLocalizations.of(context)!.humidity,
-                                      weather.first.relative_humidity,
-                                      Icons.water),
-                                ],
-                              ),
-                            ),
-                            AnimatedSize(
-                              duration: const Duration(milliseconds: 300),
-                              child: (selectedParameter == 'Sunrise/Sunset' ||
-                                          selectedParameter ==
-                                              'Izlazak/Zalazak sunca' ||
-                                          selectedParameter ==
-                                              'Vzhod/Zahod sonca') &&
-                                      !showGraph
-                                  ? Card(
-                                      shadowColor: Colors.grey,
-                                      elevation: 5,
-                                      color: Colors.white,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(15.0),
-                                      ),
-                                      margin: const EdgeInsets.symmetric(
-                                          horizontal: 16, vertical: 8),
-                                      child: SunriseSunsetWidget(
-                                        sunrise: weather.first.sunrise,
-                                        sunset: weather.first.sunset,
-                                      ))
-                                  : showGraph
-                                      ? Card(
-                                          key: ValueKey<String>(
-                                              selectedParameter),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(15.0),
-                                          ),
-                                          margin: const EdgeInsets.symmetric(
-                                              horizontal: 16, vertical: 8),
-                                          child: Container(
-                                            height:
-                                                300, // Adjusted height for the chart
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: WeatherChart(
-                                              data: snapshot.data!,
-                                              parameter: selectedParameter,
-                                            ),
-                                          ),
-                                        )
-                                      : Container(), // Empty container when no graph is shown
-                            ),
+                            _buildParameterCard(
+                                AppLocalizations.of(context)!.temperature,
+                                weather.first.temperature,
+                                Icons.thermostat,
+                                isTemperatureGood(weather.first.temperature)),
+                            _buildParameterCard(
+                                AppLocalizations.of(context)!.wind_speed,
+                                weather.first.windSpeed,
+                                Icons.air,
+                                isWindSpeedGood(weather.first.windSpeed)),
+                            _buildParameterCard(
+                                AppLocalizations.of(context)!.sunrise,
+                                '${DateFormat.Hm().format(DateTime.parse(weather.first.sunrise))} / ${DateFormat.Hm().format(DateTime.parse(weather.first.sunset))}',
+                                Icons.wb_sunny,
+                                true),
+                            _buildParameterCard(
+                                AppLocalizations.of(context)!.humidity,
+                                weather.first.relative_humidity,
+                                Icons.water,
+                                isHumidityGood(weather.first.relative_humidity)),
                           ],
                         );
                       }
                     },
                   ),
+                ),
+                AnimatedSize(
+                  duration: const Duration(milliseconds: 300),
+                  child: showGraph
+                      ? Card(
+                          key: ValueKey<String>(selectedParameter),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15.0),
+                          ),
+                          margin: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 8),
+                          child: Container(
+                            height: 300, // Adjusted height for the chart
+                            padding: const EdgeInsets.all(8.0),
+                            child: FutureBuilder<List<WeatherData>>(
+                              future: weatherData,
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState == ConnectionState.waiting) {
+                                  return const Center(child: CircularProgressIndicator());
+                                } else if (snapshot.hasError) {
+                                  print(snapshot.error);
+                                  return Center(child: Text('No weather data available.'));
+                                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                                  return const Center(child: Text('No weather data available.'));
+                                } else {
+                                  return WeatherChart(
+                                    data: snapshot.data!,
+                                    parameter: selectedParameter,
+                                  );
+                                }
+                              },
+                            ),
+                          ),
+                        )
+                      : Container(), // Empty container when no graph is shown
                 ),
               ],
             );
@@ -280,7 +279,8 @@ class _WeatherScreenState extends State<WeatherScreen> {
     );
   }
 
-  Widget _buildParameterCard(String parameter, dynamic value, IconData icon) {
+  Widget _buildParameterCard(String parameter, dynamic value, IconData icon,
+      bool isGood) {
     bool isSelected = parameter == selectedParameter;
 
     return GestureDetector(
@@ -313,6 +313,11 @@ class _WeatherScreenState extends State<WeatherScreen> {
                   Text(
                     value.toString(),
                     style: const TextStyle(fontSize: 16.0),
+                  ),
+                  const SizedBox(width: 8.0),
+                  Icon(
+                    isGood ? Icons.arrow_upward : Icons.arrow_downward,
+                    color: isGood ? Colors.green : Colors.red,
                   ),
                 ],
               ),

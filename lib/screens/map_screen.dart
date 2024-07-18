@@ -6,11 +6,8 @@ import '../models/spot_model.dart';
 import '../services/api_contant.dart';
 import '../services/auth_service.dart';
 import '../services/map_service.dart';
-import '../widgets/dialogs/spot_preview_dialog.dart';
 import '../widgets/panels/spot_preview_panel.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
 
 class MapScreen extends StatefulWidget {
   final Location? initialLocation;
@@ -24,7 +21,7 @@ class MapScreen extends StatefulWidget {
 class _MapScreenState extends State<MapScreen> {
   final Set<Marker> _markers = {};
   bool _showImage = false;
-  bool _showMySpots = true; // New state variable
+  bool _showMySpots = false; // Set default to false to show all spots initially
   LatLng? favoriteLocation;
 
   @override
@@ -33,7 +30,7 @@ class _MapScreenState extends State<MapScreen> {
     if (widget.initialLocation != null) {
       favoriteLocation =
           LatLng(widget.initialLocation!.latitude, widget.initialLocation!.longitude);
-    }else{
+    } else {
       favoriteLocation = LatLng(46.5547, 15.6459);
     }
     _getAllSpots();
@@ -65,6 +62,7 @@ class _MapScreenState extends State<MapScreen> {
 
   Future<void> _onMarkerTapped(Catch spot) async {
     final accessToken = await AuthService().getAccessToken();
+    print(accessToken);
     if (!spot.imageId.startsWith('http') && !spot.imageId.startsWith('https')) {
       final response = await http.get(
         Uri.parse('$BASE_URL/images/${spot.imageId}'),
@@ -107,7 +105,7 @@ class _MapScreenState extends State<MapScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text( AppLocalizations.of(context)!.map)
+        title: Text(AppLocalizations.of(context)!.map),
       ),
       body: Stack(
         children: [
@@ -155,7 +153,7 @@ class _MapScreenState extends State<MapScreen> {
                 selectedBorderColor: Theme.of(context).primaryColor,
                 selectedColor: Theme.of(context).primaryColor,
                 fillColor: Theme.of(context).primaryColor.withOpacity(0.1),
-                isSelected: [_showMySpots, !_showMySpots],
+                isSelected: [_showMySpots, !_showMySpots], // Correctly set the selection states
                 onPressed: (int index) {
                   setState(() {
                     _showMySpots = index == 0;
@@ -169,11 +167,11 @@ class _MapScreenState extends State<MapScreen> {
                 children: [
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 16),
-                    child: Text (AppLocalizations.of(context)!.my_spots)
+                    child: Text(AppLocalizations.of(context)!.my_spots),
                   ),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 16),
-                    child: Text(AppLocalizations.of(context)!.all_spots)
+                    child: Text(AppLocalizations.of(context)!.all_spots),
                   ),
                 ],
               ),

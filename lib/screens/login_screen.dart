@@ -14,8 +14,8 @@ class _LoginScreenState extends State<LoginScreen> {
   var _username = '';
   var _password = '';
   bool _obscureText = true;
-  bool _isLoading = false; // Add this
-  bool _isGoogleLoading = false; // Add this
+  bool _isLoading = false;
+  bool _isGoogleLoading = false;
 
   void _togglePasswordVisibility() {
     setState(() {
@@ -25,7 +25,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void performLogin() async {
     setState(() {
-      _isLoading = true; // Set loading to true when login starts
+      _isLoading = true;
     });
 
     final isValid = _formKey.currentState?.validate();
@@ -34,7 +34,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
       if (userData != null) {
         final authService = AuthService();
-        await authService.saveToken(authService.getAccessToken() as String);
+        final accessToken = await authService.getAccessToken();
+        await authService.saveToken(accessToken as String);
         final userModel = Provider.of<UserModel>(context, listen: false);
         userModel.setUser(userData);
         Navigator.of(context).pushReplacement(
@@ -48,13 +49,13 @@ class _LoginScreenState extends State<LoginScreen> {
     }
 
     setState(() {
-      _isLoading = false; // Set loading to false when login ends
+      _isLoading = false;
     });
   }
 
   void googleSignIn() async {
     setState(() {
-      _isGoogleLoading = true; // Set Google loading to true when login starts
+      _isGoogleLoading = true;
     });
 
     final userData = await AuthService().googleSignIn();
@@ -72,16 +73,16 @@ class _LoginScreenState extends State<LoginScreen> {
     }
 
     setState(() {
-      _isGoogleLoading = false; // Set Google loading to false when login ends
+      _isGoogleLoading = false;
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white, // Set background color to white
+      backgroundColor: Colors.white,
       body: Center(
-        child: Padding(
+        child: SingleChildScrollView( // Add SingleChildScrollView
           padding: const EdgeInsets.all(16.0),
           child: Form(
             key: _formKey,
@@ -89,8 +90,8 @@ class _LoginScreenState extends State<LoginScreen> {
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 Image.asset(
-                  'assets/icon/fishcast.png', // Add logo image
-                  height: 250, // You can adjust the size as needed
+                  'assets/icon/fishcast.png',
+                  height: 250,
                   width: 250,
                 ),
                 const Text(
@@ -130,7 +131,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     suffixIcon: IconButton(
                       icon: Icon(
-                        // Based on passwordVisible state choose the icon
                         _obscureText ? Icons.visibility : Icons.visibility_off,
                         color: Theme.of(context).primaryColorDark,
                       ),
@@ -163,13 +163,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
-                      backgroundColor: const Color(0xFF42d9c8), // foreground
+                      backgroundColor: const Color(0xFF42d9c8),
                     ),
                     onPressed: _isLoading ? null : performLogin,
                     child: _isLoading
                         ? const CircularProgressIndicator(
-                            valueColor:
-                                AlwaysStoppedAnimation<Color>(Colors.white),
+                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                           )
                         : const Text('Login', style: TextStyle(fontSize: 16)),
                   ),
@@ -178,71 +177,34 @@ class _LoginScreenState extends State<LoginScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    // Container(
-                    //   decoration: BoxDecoration(
-                    //     shape: BoxShape.rectangle,
-                    //     borderRadius: BorderRadius.circular(10.0), // Add this
-                    //     border: Border.all(
-                    //       color: const Color(0xFF42d9c8),
-                    //     ),
-                    //   ),
-                    //   child: IconButton(
-                    //     icon:
-                    //         Image.asset('assets/apple_logo.png', height: 18.0),
-                    //     onPressed: () {
-                    //       // Handle Google sign in
-                    //     },
-                    //   ),
-                    // ),
                     Container(
                       decoration: BoxDecoration(
                         shape: BoxShape.rectangle,
-                        borderRadius: BorderRadius.circular(10.0), // Add this
+                        borderRadius: BorderRadius.circular(10.0),
                         border: Border.all(
                           color: const Color(0xFF42d9c8),
                         ),
                       ),
                       child: IconButton(
-                        icon: _isGoogleLoading // Add this line
-                            ? const CircularProgressIndicator() // Add this line
-                            : Image.asset('assets/google_logo.png',
-                                height: 18.0),
-                        onPressed: _isGoogleLoading
-                            ? null
-                            : googleSignIn, // Add this line
+                        icon: _isGoogleLoading
+                            ? const CircularProgressIndicator()
+                            : Image.asset('assets/google_logo.png', height: 18.0),
+                        onPressed: _isGoogleLoading ? null : googleSignIn,
                       ),
                     ),
-                    // Container(
-                    //   decoration: BoxDecoration(
-                    //     shape: BoxShape.rectangle,
-                    //     borderRadius: BorderRadius.circular(10.0), // Add this
-                    //     border: Border.all(
-                    //       color: const Color(0xFF42d9c8),
-                    //     ),
-                    //   ),
-                    //   child: IconButton(
-                    //     icon: Image.asset('assets/facebook_logo.png',
-                    //         height: 18.0),
-                    //     onPressed: () {
-                    //       // Handle Facebook sign in
-                    //     },
-                    //   ),
-                    // ),
                   ],
                 ),
                 const SizedBox(height: 10.0),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white,
-                    backgroundColor: const Color(0xFF42d9c8), // foreground
+                    backgroundColor: const Color(0xFF42d9c8),
                   ),
                   child: const Text('Create Account'),
                   onPressed: () {
                     Navigator.of(context).pushNamed('/register');
-                    // Handle account creation
                   },
                 ),
-                // Add this line
               ],
             ),
           ),

@@ -1,3 +1,4 @@
+import 'package:fishingapp/services/auth_service.dart';
 import 'package:fishingapp/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:fishingapp/models/user_model.dart';
@@ -26,6 +27,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     'sl': 'Slovenian',
     'hr': 'Croatian',
   };
+
   Future _updateUser() async {
     final userModel = Provider.of<UserModel>(context, listen: false);
     final user = userModel.user;
@@ -53,6 +55,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
     print('Language: ${widget.user!.language_id}');
   }
 
+  void _toggleEditing() async {
+
+    if (_isEditing) {
+
+      await _updateUser();
+      Navigator.pop(context); // Close the screen when "Done" is clicked
+    } else {
+      setState(() {
+        _isEditing = !_isEditing;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -70,14 +85,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           const SizedBox(height: 16.0),
           ElevatedButton(
-            onPressed: () {
-              if (_isEditing) {
-                _updateUser();
-              }
-              setState(() {
-                _isEditing = !_isEditing;
-              });
-            },
+            onPressed: _toggleEditing,
             child: Text(_isEditing ? 'Done' : 'Edit'),
           ),
           const SizedBox(height: 16.0),
